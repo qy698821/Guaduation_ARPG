@@ -75,4 +75,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCameraComponent* ARPGCamera;
 
+	//Character attribute
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int HP = 1000;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int AttackPower = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int Defense = 10;
+
 };

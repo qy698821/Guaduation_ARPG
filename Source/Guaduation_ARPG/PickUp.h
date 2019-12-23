@@ -19,5 +19,9 @@ public:
 
 	//Event Interact
 	virtual void ObjectInteract(APlayerController* Controller) override;
+
+	//Actor be used
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
+		void OnUse();
 	
 };

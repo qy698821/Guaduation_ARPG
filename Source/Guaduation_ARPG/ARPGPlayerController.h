@@ -17,7 +17,6 @@ class GUADUATION_ARPG_API AARPGPlayerController : public APlayerController
 	GENERATED_BODY()
 protected:
 	virtual void SetupInputComponent() override;
-	virtual void BeginPlay() override;
 
 public:
 	//Move function
@@ -43,11 +42,12 @@ public:
 	void ObjectInteract();
 
 	//Init Inventory
+	UFUNCTION(BlueprintCallable)
 	void InitInventory();
 
 	//Inventory num
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	int Num_Inventory = 32;
+	int Num_Inventory = 40;
 
 	//Add Invemtory By ID
 	void AddInventoryByID(FName ID);
@@ -57,6 +57,17 @@ public:
 
 	//Add Inventory Objeck
 	void AddInventoryObjeck(FInventoryItem* Item);
+
+	//Reduce Num of Inventory
+	UFUNCTION(BlueprintCallable)
+		void InventoryOnUse(int Num, int index);
+
+	//Exchange Item By Index
+	UFUNCTION(BlueprintCallable)
+		void ExchangeByIndex(int Index1, int Index2, FInventoryItem Inventory1, FInventoryItem Inventory2);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void LoadWidget();
 
 
 	

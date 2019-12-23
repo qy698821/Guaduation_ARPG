@@ -5,12 +5,6 @@
 #include "ARPGGameMode.h"
 #include "Engine.h"
 
-void AARPGPlayerController::BeginPlay() 
-{
-	Super::BeginPlay();
-	InitInventory();
-}
-
 void AARPGPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -107,4 +101,28 @@ void AARPGPlayerController::AddInventoryByID(FName ID)
 	{
 		AddInventoryObjeck(ItemToAdd);
 	}
+}
+
+void AARPGPlayerController::InventoryOnUse(int Num, int index) 
+{
+	if (Inventory[index].Number > 1) 
+	{
+		Inventory[index].Number--;
+	}
+	else if (Inventory[index].Number == 1) 
+	{
+		AARPGGameMode* GameMode = Cast<AARPGGameMode>(GetWorld()->GetAuthGameMode());
+		UDataTable* ItemTable = GameMode->GetInventoryTable();
+		FInventoryItem* ItemToAdd = ItemTable->FindRow<FInventoryItem>("0", "");
+		Inventory.RemoveAt(index);
+		Inventory.Insert(*ItemToAdd, index);
+	}
+}
+
+void AARPGPlayerController::ExchangeByIndex(int Index1, int Index2, FInventoryItem Inventory1, FInventoryItem Inventory2) 
+{
+	Inventory.RemoveAt(Index1);
+	Inventory.Insert(Inventory2, Index1);
+	Inventory.RemoveAt(Index2);
+	Inventory.Insert(Inventory1, Index2);
 }

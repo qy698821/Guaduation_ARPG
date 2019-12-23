@@ -15,7 +15,7 @@ AInteract::AInteract()
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	RootComponent = CollisionComponent;
 	ActorVisual->SetupAttachment(RootComponent);
-	CollisionComponent->SetSphereRadius(50.0f);
+	CollisionComponent->SetSphereRadius(80.0f);
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AInteract::BeginOverlap);
 	CollisionComponent->OnComponentEndOverlap.AddDynamic(this, &AInteract::EndOverlap);
 

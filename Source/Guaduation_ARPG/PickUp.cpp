@@ -11,6 +11,7 @@ void APickUp::ObjectInteract(APlayerController* Controller)
 	{
 		Ptr->AddInventoryByID(ID);
 		this->Destroy();
+		Ptr->LoadWidget();
 	}
 }
 
