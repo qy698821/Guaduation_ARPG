@@ -36,7 +36,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FString GetText() const
 	{
-		return FString::Printf(TEXT("%s : 按E键%s"), *Name, *Action);
+		return FString::Printf(TEXT(". %s : 按E键%s"), *Name, *Action);
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
