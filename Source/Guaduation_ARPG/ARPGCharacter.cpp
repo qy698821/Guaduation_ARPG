@@ -10,7 +10,10 @@ AARPGCharacter::AARPGCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ARPGCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ARPGCamera"));
-	ARPGCamera->SetupAttachment(RootComponent);
+	ARPGSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("ARPGSpringArm"));
+
+	ARPGSpringArm->SetupAttachment(RootComponent);
+	ARPGCamera->SetupAttachment(ARPGSpringArm, USpringArmComponent::SocketName);
 
 }
 

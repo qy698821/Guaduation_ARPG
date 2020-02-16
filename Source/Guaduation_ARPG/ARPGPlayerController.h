@@ -58,6 +58,11 @@ public:
 	//Add Inventory Objeck
 	void AddInventoryObjeck(FInventoryItem* Item);
 
+	//Jump
+	void StartJump();
+
+	void StopJump();
+
 	//Reduce Num of Inventory
 	UFUNCTION(BlueprintCallable)
 		void InventoryOnUse(int Num, int index);

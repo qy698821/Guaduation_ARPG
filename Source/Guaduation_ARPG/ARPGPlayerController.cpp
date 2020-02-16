@@ -14,17 +14,23 @@ void AARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveForward", this, &AARPGPlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AARPGPlayerController::MoveRight);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AARPGPlayerController::ObjectInteract);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AARPGPlayerController::StartJump);
+	InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
 }
 
 void AARPGPlayerController::MoveForward(float Value) 
 {
-	FVector Direction = FRotationMatrix(this->GetControlRotation()).GetScaledAxis(EAxis::X);
+	const FRotator Rotation = this->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	this->GetCharacter()->AddMovementInput(Direction, Value);
 }
 
 void AARPGPlayerController::MoveRight(float Value) 
 {
-	FVector Direction = FRotationMatrix(this->GetControlRotation()).GetScaledAxis(EAxis::Y);
+	const FRotator Rotation = this->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	this->GetCharacter()->AddMovementInput(Direction, Value);
 }
 
@@ -86,6 +92,16 @@ void AARPGPlayerController::AddInventoryObjeck(FInventoryItem* Item)
 			return;
 		}
 	}
+}
+
+void AARPGPlayerController::StartJump()
+{
+	this->GetCharacter()->bPressedJump = true;
+}
+
+void AARPGPlayerController::StopJump()
+{
+	this->GetCharacter()->bPressedJump = false;
 }
 
 void AARPGPlayerController::AddInventoryByID(FName ID) 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/DataTable.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
 #include "ARPGCharacter.generated.h"
 
@@ -60,6 +61,7 @@ public:
 	// Sets default values for this character's properties
 	AARPGCharacter();
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -74,6 +76,10 @@ public:
 	//AddCameraComponent
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCameraComponent* ARPGCamera;
+
+	//AddCameraSpringArm
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USpringArmComponent* ARPGSpringArm;
 
 	//Character attribute
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
