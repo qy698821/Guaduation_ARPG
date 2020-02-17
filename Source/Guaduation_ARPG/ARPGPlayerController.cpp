@@ -16,6 +16,7 @@ void AARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AARPGPlayerController::ObjectInteract);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AARPGPlayerController::StartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
+	InputComponent->BindAction("FastAttack", IE_Pressed, this, &AARPGPlayerController::OnFastAttack);
 }
 
 void AARPGPlayerController::MoveForward(float Value) 
@@ -141,4 +142,13 @@ void AARPGPlayerController::ExchangeByIndex(int Index1, int Index2, FInventoryIt
 	Inventory.Insert(Inventory2, Index1);
 	Inventory.RemoveAt(Index2);
 	Inventory.Insert(Inventory1, Index2);
+}
+
+void AARPGPlayerController::OnFastAttack()
+{
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr) 
+	{
+		CharacterPtr->OnFastAttack();
+	}
 }

@@ -81,14 +81,60 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USpringArmComponent* ARPGSpringArm;
 
-	//Character attribute
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	///Character attribute
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		int HP = 1000;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		int AttackPower = 10;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		int Defense = 10;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
+		float AttackSpeed = 0.8f;
+
+	///End
+
+	///Attack Montage
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* FastAttack1 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* FastAttack2 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* FastAttack3 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* StrongAttack1 = nullptr;
+
+	///End
+
+	//Bind FastAttack Action
+	void OnFastAttack();
+
+	///Character Attack
+
+	UPROPERTY(EditAnywhere)
+		bool IsAttacking = false;
+
+	UPROPERTY(EditAnywhere)
+		bool SaveAttack = false;
+
+	int FastAttackCount = 0;
+
+	//Record Walk speed before attack
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+	float MyWalkSpeed = 0.0f;
+
+	//Combo System
+	UFUNCTION(BlueprintCallable)
+		void ResetCombo();
+
+	UFUNCTION(BlueprintCallable)
+		void ComboAttackSave();
+
+	///End
 };

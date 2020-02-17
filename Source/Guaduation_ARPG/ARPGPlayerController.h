@@ -74,6 +74,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void LoadWidget();
 
-
+	//Bind FastAttack Action
+	void OnFastAttack();
 	
 };

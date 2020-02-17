@@ -2,6 +2,7 @@
 
 
 #include "ARPGCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AARPGCharacter::AARPGCharacter()
@@ -12,6 +13,7 @@ AARPGCharacter::AARPGCharacter()
 	ARPGCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ARPGCamera"));
 	ARPGSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("ARPGSpringArm"));
 
+	MyWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	ARPGSpringArm->SetupAttachment(RootComponent);
 	ARPGCamera->SetupAttachment(ARPGSpringArm, USpringArmComponent::SocketName);
 
@@ -36,5 +38,68 @@ void AARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AARPGCharacter::OnFastAttack()
+{
+	if (IsAttacking) 
+	{
+		SaveAttack = true;
+	}
+	else 
+	{
+		IsAttacking = true;
+
+		//stop move
+		//GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+
+		if (FastAttackCount == 0) 
+		{
+			FastAttackCount = 1;
+			this->PlayAnimMontage(FastAttack1, AttackSpeed);
+		}
+		else if (FastAttackCount == 1) 
+		{
+			FastAttackCount = 2;
+			this->PlayAnimMontage(FastAttack2, AttackSpeed);
+		}
+		else if (FastAttackCount == 2)
+		{
+			FastAttackCount = 0;
+			this->PlayAnimMontage(FastAttack3, AttackSpeed);
+		}
+	}
+}
+
+void AARPGCharacter::ResetCombo()
+{
+	//this->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	FastAttackCount = 0;
+	IsAttacking = false;
+	SaveAttack = false;
+}
+
+void AARPGCharacter::ComboAttackSave()
+{
+	if (SaveAttack) 
+	{
+		SaveAttack = false;
+		if (FastAttackCount == 0)
+		{
+			FastAttackCount = 1;
+			this->PlayAnimMontage(FastAttack1, AttackSpeed);
+		}
+		else if (FastAttackCount == 1)
+		{
+			FastAttackCount = 2;
+			this->PlayAnimMontage(FastAttack2, AttackSpeed);
+		}
+		else if (FastAttackCount == 2)
+		{
+			FastAttackCount = 0;
+			this->PlayAnimMontage(FastAttack3, AttackSpeed);
+		}
+
+	}
 }
 
