@@ -83,18 +83,40 @@ public:
 
 	///Character attribute
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
-		int HP = 1000;
+		float HP = 1000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
-		int AttackPower = 10;
+		float MaxHP = 1000.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character attribute")
+		float UnrealHP = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
-		int Defense = 10;
+		float AttackPower = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
+		float Defense = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float AttackSpeed = 0.8f;
 
 	///End
+
+
+	///HpBar
+
+	float Damage = 200.0f;
+
+	UFUNCTION(BlueprintCallable)
+		void ReduceHp();
+
+	FTimerHandle UnrealReduceTier;
+
+	void ReduceHpByTimer();
+
+
+	///End
+
 
 	///Attack Montage
 

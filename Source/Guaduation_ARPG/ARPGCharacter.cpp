@@ -3,6 +3,7 @@
 
 #include "ARPGCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Engine.h"
 
 // Sets default values
 AARPGCharacter::AARPGCharacter()
@@ -16,13 +17,13 @@ AARPGCharacter::AARPGCharacter()
 	MyWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	ARPGSpringArm->SetupAttachment(RootComponent);
 	ARPGCamera->SetupAttachment(ARPGSpringArm, USpringArmComponent::SocketName);
-
 }
 
 // Called when the game starts or when spawned
 void AARPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	UnrealHP = HP;
 	
 }
 
@@ -38,6 +39,38 @@ void AARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AARPGCharacter::ReduceHp()
+{
+	if (UnrealReduceTier.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(UnrealReduceTier);
+	}
+	UnrealHP = HP;
+	if (HP - Damage >= 0.0f) 
+	{
+		HP -= Damage;
+		GetWorld()->GetTimerManager().SetTimer(UnrealReduceTier, this, &AARPGCharacter::ReduceHpByTimer, 0.02f, true, -1.0f);
+	}
+	else 
+	{
+		HP = 0;
+		GetWorld()->GetTimerManager().SetTimer(UnrealReduceTier, this, &AARPGCharacter::ReduceHpByTimer, 0.02f, true, -1.0f);
+	}
+}
+
+void AARPGCharacter::ReduceHpByTimer()
+{
+	UnrealHP -= MaxHP * 0.01f;
+	if (UnrealHP <= HP) 
+	{
+		UnrealHP = HP;
+		if (UnrealReduceTier.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(UnrealReduceTier);
+		}
+	}
 }
 
 void AARPGCharacter::OnFastAttack()
