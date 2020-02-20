@@ -38,7 +38,7 @@ public:
 	UTexture2D* Thumbnail;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Value;
+	float Value;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Number;
@@ -105,15 +105,22 @@ public:
 
 	///HpBar
 
-	float Damage = 200.0f;
+	  //The Increment Of HP
+	float IncrementOfHp = 0.0f;
 
 	UFUNCTION(BlueprintCallable)
-		void ReduceHp();
+		void ReduceHp(float Damage);
+
+	UFUNCTION(BlueprintCallable)
+		void AddHp(float Value);
 
 	FTimerHandle UnrealReduceTier;
 
 	void ReduceHpByTimer();
 
+	FTimerHandle HpAddTimer;
+
+	void AddHpByTimer();
 
 	///End
 

@@ -17,6 +17,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FName ID;
 
+	UPROPERTY(BlueprintReadWrite)
+		float Value = 0.0f;
+
 	//Event Interact
 	virtual void ObjectInteract(APlayerController* Controller) override;
 

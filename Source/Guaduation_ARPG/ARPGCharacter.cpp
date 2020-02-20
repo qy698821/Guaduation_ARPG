@@ -41,7 +41,7 @@ void AARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-void AARPGCharacter::ReduceHp()
+void AARPGCharacter::ReduceHp(float Damage)
 {
 	if (UnrealReduceTier.IsValid())
 	{
@@ -63,13 +63,46 @@ void AARPGCharacter::ReduceHp()
 void AARPGCharacter::ReduceHpByTimer()
 {
 	UnrealHP -= MaxHP * 0.01f;
-	if (UnrealHP <= HP) 
+	if (UnrealHP <= HP)
 	{
 		UnrealHP = HP;
 		if (UnrealReduceTier.IsValid())
 		{
 			GetWorld()->GetTimerManager().ClearTimer(UnrealReduceTier);
 		}
+	}
+}
+
+void AARPGCharacter::AddHp(float Value)
+{
+
+	IncrementOfHp += Value;
+
+	if (HP + Value > MaxHP) 
+	{
+		IncrementOfHp = MaxHP - HP;
+	}
+	if (!HpAddTimer.IsValid()) 
+	{
+		GetWorld()->GetTimerManager().SetTimer(HpAddTimer, this, &AARPGCharacter::AddHpByTimer, 0.02f, true, -1.0f);
+	}
+}
+
+
+void AARPGCharacter::AddHpByTimer()
+{
+	if (IncrementOfHp <= 0.0f)
+	{
+		IncrementOfHp = 0.0f;
+		if (HpAddTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(HpAddTimer);
+		}
+	}
+	else 
+	{
+		HP += MaxHP * 0.01f;
+		IncrementOfHp -= MaxHP * 0.01f;
 	}
 }
 
@@ -117,6 +150,7 @@ void AARPGCharacter::ComboAttackSave()
 	if (SaveAttack) 
 	{
 		SaveAttack = false;
+		//Exchange Combo
 		if (FastAttackCount == 0)
 		{
 			FastAttackCount = 1;
