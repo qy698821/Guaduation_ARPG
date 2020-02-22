@@ -1,9 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ARPGCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AARPGCharacter::AARPGCharacter()
@@ -17,6 +19,9 @@ AARPGCharacter::AARPGCharacter()
 	MyWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	ARPGSpringArm->SetupAttachment(RootComponent);
 	ARPGCamera->SetupAttachment(ARPGSpringArm, USpringArmComponent::SocketName);
+
+	ObjectTypes.Add(ObjectTypeQuery1);
+	ObjectTypes.Add(ObjectTypeQuery2);
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +36,10 @@ void AARPGCharacter::BeginPlay()
 void AARPGCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (IsLocked) 
+	{
+		SetCameraRotation(DeltaTime);
+	}
 
 }
 
@@ -78,7 +87,7 @@ void AARPGCharacter::AddHp(float Value)
 
 	IncrementOfHp += Value;
 
-	if (HP + Value > MaxHP) 
+	if (HP + IncrementOfHp > MaxHP)
 	{
 		IncrementOfHp = MaxHP - HP;
 	}
@@ -170,3 +179,110 @@ void AARPGCharacter::ComboAttackSave()
 	}
 }
 
+bool AARPGCharacter::LineOfSightCheck(AActor * OtherActor)
+{
+	TArray<AActor*> ActorsToIgnore;
+	FHitResult Hit;
+	return !UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), ARPGCamera->GetComponentLocation(), OtherActor->GetActorLocation(), ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 3.0f);
+}
+
+bool AARPGCharacter::GetAllEnemys()
+{
+	//clear all
+	Enemies.Empty();
+	CenterRotation.Empty();
+
+	TArray<AActor*> OutArray;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyBase::StaticClass(), OutArray);
+	for (auto& n : OutArray) 
+	{
+		//Check if in the range of distace and if blocked
+		if (GetDistanceTo(n) <= MaxLockDistance && LineOfSightCheck(n))
+		{
+			//Get the difference value of target and self
+			FRotator FromTarget = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), n->GetActorLocation());
+			FRotator FromSelf = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), this->GetActorLocation());
+			AEnemyBase* Ptr = Cast<AEnemyBase>(n);
+			if (Ptr) 
+			{
+				Enemies.Add(Ptr, FromTarget.Yaw - FromSelf.Yaw);
+				CenterRotation.Add(fabs(FromTarget.Yaw - FromSelf.Yaw));
+			}
+		}
+	}
+	if (Enemies.Num() > 0) 
+	{
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
+}
+
+void AARPGCharacter::LockEnemy()
+{
+	if (!IsLocked) 
+	{
+		//Prepare for Lock
+		if (GetAllEnemys()) 
+		{
+			int MinIndex = 0;
+			float MinValue = 0.0f;
+			TArray<AEnemyBase* > EnemiesKeyArray;
+			TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypesSelf;
+			ObjectTypesSelf.Add(ObjectTypeQuery7);
+			TArray<AActor*> ActorsToIgnore;
+			FHitResult Hit;
+
+			UKismetMathLibrary::MinOfFloatArray(CenterRotation, MinIndex, MinValue);
+			Enemies.GenerateKeyArray(EnemiesKeyArray);
+			ActorsToIgnore.Add(EnemiesKeyArray[MinIndex]);
+			if (UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), this->GetActorLocation(), EnemiesKeyArray[MinIndex]->GetActorLocation(), 20.0f, ObjectTypesSelf, false, ActorsToIgnore, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 3.0f)) 
+			{
+				AEnemyBase* Ptr = Cast<AEnemyBase>(Hit.Actor);
+				if (Ptr) 
+				{
+					LockOn(Ptr);
+				}
+			}
+			else 
+			{
+				LockOn(EnemiesKeyArray[MinIndex]);
+			}
+		}
+	}
+	else 
+	{
+		//Remove Lock
+		LockOff();
+	}
+}
+
+void AARPGCharacter::LockOn(AEnemyBase * Target)
+{
+	IsLocked = true;
+	CurrentEnemy = Target;
+	CurrentEnemy->LockTarget->SetVisibility(true, false);
+}
+
+void AARPGCharacter::LockOff()
+{
+	IsLocked = false;
+	CurrentEnemy->LockTarget->SetVisibility(false, false);
+}
+
+void AARPGCharacter::SetCameraRotation(float DeltaTime)
+{
+	FRotator Start = this->GetController()->GetControlRotation();
+	FRotator End;
+	End.Roll = Start.Roll;
+	End.Pitch = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), CurrentEnemy->GetActorLocation()).Pitch;
+	End.Yaw = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), CurrentEnemy->GetActorLocation()).Yaw;
+	this->GetController()->SetControlRotation(UKismetMathLibrary::RInterpTo(Start, End, DeltaTime, 15.0f));
+
+	if (!(GetDistanceTo(CurrentEnemy) <= MaxLockDistance && LineOfSightCheck(CurrentEnemy))) 
+	{
+		LockOff();
+	}
+}

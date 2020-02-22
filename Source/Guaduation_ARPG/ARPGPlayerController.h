@@ -25,6 +25,12 @@ public:
 	UFUNCTION()
 	void MoveRight(float Value);
 
+	UFUNCTION()
+		void Turn(float Value);
+
+	UFUNCTION()
+		void LookUp(float Value);
+
 	//Inventory save
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FInventoryItem> Inventory;
@@ -76,5 +82,9 @@ public:
 
 	//Bind FastAttack Action
 	void OnFastAttack();
+
+	//Bind LockEnemy Action
+	void LockEnemy();
+
 	
 };

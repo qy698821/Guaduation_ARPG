@@ -9,14 +9,15 @@ void AARPGPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	//Bind actions and axis
-	InputComponent->BindAxis("LookUp", this, &AARPGPlayerController::AddPitchInput);
-	InputComponent->BindAxis("Turn", this, &AARPGPlayerController::AddYawInput);
+	InputComponent->BindAxis("LookUp", this, &AARPGPlayerController::LookUp);
+	InputComponent->BindAxis("Turn", this, &AARPGPlayerController::Turn);
 	InputComponent->BindAxis("MoveForward", this, &AARPGPlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AARPGPlayerController::MoveRight);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AARPGPlayerController::ObjectInteract);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AARPGPlayerController::StartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
 	InputComponent->BindAction("FastAttack", IE_Pressed, this, &AARPGPlayerController::OnFastAttack);
+	InputComponent->BindAction("LockEnemy", IE_Pressed, this, &AARPGPlayerController::LockEnemy);
 }
 
 void AARPGPlayerController::MoveForward(float Value) 
@@ -33,6 +34,30 @@ void AARPGPlayerController::MoveRight(float Value)
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	this->GetCharacter()->AddMovementInput(Direction, Value);
+}
+
+void AARPGPlayerController::Turn(float Value)
+{
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr)
+	{
+		if (!CharacterPtr->IsLocked) 
+		{
+			AddYawInput(Value);
+		}
+	}
+}
+
+void AARPGPlayerController::LookUp(float Value)
+{
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr)
+	{
+		if (!CharacterPtr->IsLocked)
+		{
+			AddPitchInput(Value);
+		}
+	}
 }
 
 void AARPGPlayerController::SetCurrentInteract(AInteract* Interact) 
@@ -150,5 +175,14 @@ void AARPGPlayerController::OnFastAttack()
 	if (CharacterPtr) 
 	{
 		CharacterPtr->OnFastAttack();
+	}
+}
+
+void AARPGPlayerController::LockEnemy()
+{
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr)
+	{
+		CharacterPtr->LockEnemy();
 	}
 }

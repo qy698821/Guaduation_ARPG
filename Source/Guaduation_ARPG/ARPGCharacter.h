@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
+#include "EnemyBase.h"
 #include "ARPGCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -165,5 +166,38 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ComboAttackSave();
 
+	///End
+
+	/// Lock enemy system
+
+	TMap<AEnemyBase*, float> Enemies;
+
+	//The abs of defference value
+	TArray<float> CenterRotation;
+
+	AEnemyBase* CurrentEnemy;
+
+	bool IsLocked = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock System")
+		TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock System")
+		float MaxLockDistance = 1500.0f;
+
+	bool LineOfSightCheck(AActor* OtherActor);
+
+	bool GetAllEnemys();
+
+	//Bind action
+	void LockEnemy();
+
+	//Begin Lock
+	void LockOn(AEnemyBase* Target);
+
+	//Remove Lock
+	void LockOff();
+
+	void SetCameraRotation(float DeltaTime);
 	///End
 };
