@@ -193,6 +193,7 @@ bool AARPGCharacter::GetAllEnemys()
 	CenterRotation.Empty();
 
 	TArray<AActor*> OutArray;
+	TMap<AEnemyBase*, float> LocalEnemies;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyBase::StaticClass(), OutArray);
 	for (auto& n : OutArray) 
 	{
@@ -205,10 +206,26 @@ bool AARPGCharacter::GetAllEnemys()
 			AEnemyBase* Ptr = Cast<AEnemyBase>(n);
 			if (Ptr) 
 			{
-				Enemies.Add(Ptr, FromTarget.Yaw - FromSelf.Yaw);
-				CenterRotation.Add(fabs(FromTarget.Yaw - FromSelf.Yaw));
+				LocalEnemies.Add(Ptr, FromTarget.Yaw - FromSelf.Yaw);
 			}
 		}
+	}
+	TArray<float> LocalEnemiesValues;
+	TArray<AEnemyBase*> LocalEnemiseKey;
+	//Sort
+	while (LocalEnemies.Num() > 0) 
+	{
+		LocalEnemies.GenerateValueArray(LocalEnemiesValues);
+		LocalEnemies.GenerateKeyArray(LocalEnemiseKey);
+		int MinIndex = 0;
+		float MinValue = 0.0f;
+		UKismetMathLibrary::MinOfFloatArray(LocalEnemiesValues, MinIndex, MinValue);
+
+		Enemies.Add(LocalEnemiseKey[MinIndex], LocalEnemiesValues[MinIndex]);
+		CenterRotation.Add(fabs(LocalEnemiesValues[MinIndex]));
+
+		LocalEnemies.Remove(LocalEnemiseKey[MinIndex]);
+
 	}
 	if (Enemies.Num() > 0) 
 	{
@@ -284,5 +301,45 @@ void AARPGCharacter::SetCameraRotation(float DeltaTime)
 	if (!(GetDistanceTo(CurrentEnemy) <= MaxLockDistance && LineOfSightCheck(CurrentEnemy))) 
 	{
 		LockOff();
+	}
+}
+
+void AARPGCharacter::Switch(int value)
+{
+	if (IsLocked) 
+	{
+		if (GetAllEnemys() && Enemies.Num() > 1) 
+		{
+			int CurrentIndex = 0;
+			TArray<AEnemyBase*> LocalEnemiseKey;
+			Enemies.GenerateKeyArray(LocalEnemiseKey);
+			LocalEnemiseKey.Find(CurrentEnemy, CurrentIndex);
+			//Switch Left
+			if (value == 0) 
+			{
+				if (CurrentIndex == 0) 
+				{
+					CurrentIndex = LocalEnemiseKey.Num() - 1;
+				}
+				else 
+				{
+					CurrentIndex -= 1;
+				}
+			}
+			//Switch Right
+			else 
+			{
+				if (CurrentIndex == LocalEnemiseKey.Num() - 1) 
+				{
+					CurrentIndex = 0;
+				}
+				else 
+				{
+					CurrentIndex += 1;
+				}
+			}
+			LockOff();
+			LockOn(LocalEnemiseKey[CurrentIndex]);
+		}
 	}
 }

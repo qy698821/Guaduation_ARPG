@@ -199,5 +199,8 @@ public:
 	void LockOff();
 
 	void SetCameraRotation(float DeltaTime);
+
+	//Bind Switch Action
+	void Switch(int value);
 	///End
 };

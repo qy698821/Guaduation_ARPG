@@ -18,6 +18,8 @@ void AARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
 	InputComponent->BindAction("FastAttack", IE_Pressed, this, &AARPGPlayerController::OnFastAttack);
 	InputComponent->BindAction("LockEnemy", IE_Pressed, this, &AARPGPlayerController::LockEnemy);
+	InputComponent->BindAction("SwitchLeft", IE_Pressed, this, &AARPGPlayerController::SwitchLeft);
+	InputComponent->BindAction("SwitchRight", IE_Pressed, this, &AARPGPlayerController::SwitchRight);
 }
 
 void AARPGPlayerController::MoveForward(float Value) 
@@ -184,5 +186,23 @@ void AARPGPlayerController::LockEnemy()
 	if (CharacterPtr)
 	{
 		CharacterPtr->LockEnemy();
+	}
+}
+
+void AARPGPlayerController::SwitchLeft()
+{
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr)
+	{
+		CharacterPtr->Switch(0);
+	}
+}
+
+void AARPGPlayerController::SwitchRight()
+{
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr)
+	{
+		CharacterPtr->Switch(1);
 	}
 }

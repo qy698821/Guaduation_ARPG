@@ -86,5 +86,11 @@ public:
 	//Bind LockEnemy Action
 	void LockEnemy();
 
+	//Bind SwitchLeft Action
+	void SwitchLeft();
+
+	//Bind SwitchRight Action
+	void SwitchRight();
+
 	
 };
