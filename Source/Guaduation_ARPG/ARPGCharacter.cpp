@@ -203,8 +203,10 @@ bool AARPGCharacter::GetAllEnemys()
 			//Get the difference value of target and self
 			FRotator FromTarget = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), n->GetActorLocation());
 			FRotator FromSelf = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), this->GetActorLocation());
+
+			//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("%f"), FromTarget.Yaw - FromSelf.Yaw));
 			AEnemyBase* Ptr = Cast<AEnemyBase>(n);
-			if (Ptr) 
+			if (Ptr && (fabs(FromTarget.Yaw - FromSelf.Yaw) <= 50.0f || fabs(FromTarget.Yaw - FromSelf.Yaw) >= 310.0f))
 			{
 				LocalEnemies.Add(Ptr, FromTarget.Yaw - FromSelf.Yaw);
 			}
@@ -222,7 +224,7 @@ bool AARPGCharacter::GetAllEnemys()
 		UKismetMathLibrary::MinOfFloatArray(LocalEnemiesValues, MinIndex, MinValue);
 
 		Enemies.Add(LocalEnemiseKey[MinIndex], LocalEnemiesValues[MinIndex]);
-		CenterRotation.Add(fabs(LocalEnemiesValues[MinIndex]));
+		CenterRotation.Add(GetDistanceTo(LocalEnemiseKey[MinIndex]));
 
 		LocalEnemies.Remove(LocalEnemiseKey[MinIndex]);
 
