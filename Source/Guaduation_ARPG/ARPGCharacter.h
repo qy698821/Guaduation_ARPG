@@ -10,6 +10,7 @@
 #include "EnemyBase.h"
 #include "ARPGCharacter.generated.h"
 
+//Inventory item attribute
 USTRUCT(BlueprintType)
 struct FInventoryItem : public FTableRowBase 
 {

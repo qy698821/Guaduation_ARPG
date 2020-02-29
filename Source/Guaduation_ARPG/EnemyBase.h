@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CharacterBase.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "EnemyBase.generated.h"
 
 /**
@@ -16,10 +17,23 @@ class GUADUATION_ARPG_API AEnemyBase : public ACharacterBase
 	GENERATED_BODY()
 
 public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 	AEnemyBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* LockTarget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UWidgetComponent* HpWidget;
+	
+	ACharacter* LocalCharacter = nullptr;
+
+	bool IsLocked = false;
+
+	void Locked(ACharacter* CharacterPtr);
+
+	void LockOff();
 	
 };

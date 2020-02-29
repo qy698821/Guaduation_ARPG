@@ -278,17 +278,19 @@ void AARPGCharacter::LockEnemy()
 	}
 }
 
+//Lock Enemy
 void AARPGCharacter::LockOn(AEnemyBase * Target)
 {
 	IsLocked = true;
 	CurrentEnemy = Target;
-	CurrentEnemy->LockTarget->SetVisibility(true, false);
+	CurrentEnemy->Locked(this);
 }
 
+//Release Lock
 void AARPGCharacter::LockOff()
 {
 	IsLocked = false;
-	CurrentEnemy->LockTarget->SetVisibility(false, false);
+	CurrentEnemy->LockOff();
 }
 
 void AARPGCharacter::SetCameraRotation(float DeltaTime)
