@@ -132,16 +132,19 @@ void AARPGCharacter::OnFastAttack()
 		{
 			FastAttackCount = 1;
 			this->PlayAnimMontage(FastAttack1, AttackSpeed);
+			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound1);
 		}
 		else if (FastAttackCount == 1) 
 		{
 			FastAttackCount = 2;
 			this->PlayAnimMontage(FastAttack2, AttackSpeed);
+			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound2);
 		}
 		else if (FastAttackCount == 2)
 		{
 			FastAttackCount = 0;
 			this->PlayAnimMontage(FastAttack3, AttackSpeed);
+			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
 		}
 	}
 }
@@ -164,16 +167,19 @@ void AARPGCharacter::ComboAttackSave()
 		{
 			FastAttackCount = 1;
 			this->PlayAnimMontage(FastAttack1, AttackSpeed);
+			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound1);
 		}
 		else if (FastAttackCount == 1)
 		{
 			FastAttackCount = 2;
 			this->PlayAnimMontage(FastAttack2, AttackSpeed);
+			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound2);
 		}
 		else if (FastAttackCount == 2)
 		{
 			FastAttackCount = 0;
 			this->PlayAnimMontage(FastAttack3, AttackSpeed);
+			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
 		}
 
 	}
@@ -302,7 +308,7 @@ void AARPGCharacter::SetCameraRotation(float DeltaTime)
 	End.Yaw = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), CurrentEnemy->GetActorLocation()).Yaw;
 	this->GetController()->SetControlRotation(UKismetMathLibrary::RInterpTo(Start, End, DeltaTime, 15.0f));
 
-	if (!(GetDistanceTo(CurrentEnemy) <= MaxLockDistance && LineOfSightCheck(CurrentEnemy))) 
+	if (!(GetDistanceTo(CurrentEnemy) <= MaxLockDistance && LineOfSightCheck(CurrentEnemy)))
 	{
 		LockOff();
 	}

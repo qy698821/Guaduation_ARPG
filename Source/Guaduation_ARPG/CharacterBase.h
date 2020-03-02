@@ -59,4 +59,19 @@ public:
 
 	///End
 
+	///Attack Montage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* DeathMontage = nullptr;
+
+	///End
+
+	///Attack Sound
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Sound")
+		USoundWave* DeathSound = nullptr;
+
+	FTimerHandle DeathTimer;
+	///End
+
+	//Destory by timer
+	void DestoryByTimer();
 };

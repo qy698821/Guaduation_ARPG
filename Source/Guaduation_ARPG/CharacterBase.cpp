@@ -2,7 +2,9 @@
 
 
 #include "CharacterBase.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Engine.h"
+#include "ARPGCharacter.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
@@ -45,10 +47,23 @@ void ACharacterBase::ReduceHp(float Damage)
 		HP -= Damage;
 		GetWorld()->GetTimerManager().SetTimer(UnrealReduceTier, this, &ACharacterBase::ReduceHpByTimer, 0.02f, true, -1.0f);
 	}
+	//Death
 	else
 	{
 		HP = 0;
 		GetWorld()->GetTimerManager().SetTimer(UnrealReduceTier, this, &ACharacterBase::ReduceHpByTimer, 0.02f, true, -1.0f);
+		if (!DeathTimer.IsValid()) 
+		{
+			AARPGCharacter* Ptr = Cast<AARPGCharacter>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter());
+			//Reset lock
+			if (Ptr) 
+			{
+				Ptr->LockOff();
+			}
+			this->PlayAnimMontage(DeathMontage, 1.0f);
+			UGameplayStatics::PlaySound2D(GetWorld(), DeathSound);
+			GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ACharacterBase::DestoryByTimer, 2.0, false, 1.5f);
+		}
 	}
 }
 
@@ -65,3 +80,8 @@ void ACharacterBase::ReduceHpByTimer()
 	}
 }
 
+void ACharacterBase::DestoryByTimer() 
+{
+	//this->Destroyed();
+	this->Destroy();
+}

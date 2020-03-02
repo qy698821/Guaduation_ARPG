@@ -143,6 +143,19 @@ public:
 
 	///End
 
+	///Attack Sound
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Sound")
+		USoundWave* FastAttackSound1 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Sound")
+		USoundWave* FastAttackSound2 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Sound")
+		USoundWave* FastAttackSound3 = nullptr;
+
+	///End
+
 	//Bind FastAttack Action
 	void OnFastAttack();
 
@@ -166,6 +179,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void ComboAttackSave();
+
+	
 
 	///End
 
