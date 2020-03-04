@@ -60,8 +60,27 @@ public:
 	///End
 
 	///Attack Montage
+	UFUNCTION(BlueprintCallable)
+		void Damaged(AActor* Attacker, float Damage);
+
+	float GetAttackAngle(AActor* Attacker);
+
+	void PlayDamageMontage(float angle);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
 		UAnimMontage* DeathMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* HitReactBwd = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* HitReactFwd = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* HitReactLeft = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* HitReactRight = nullptr;
 
 	///End
 

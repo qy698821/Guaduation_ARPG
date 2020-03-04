@@ -3,6 +3,7 @@
 
 #include "CharacterBase.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 #include "Engine.h"
 #include "ARPGCharacter.h"
 
@@ -78,6 +79,44 @@ void ACharacterBase::ReduceHpByTimer()
 			GetWorld()->GetTimerManager().ClearTimer(UnrealReduceTier);
 		}
 	}
+}
+
+void ACharacterBase::Damaged(AActor * Attacker, float Damage)
+{
+	PlayDamageMontage(GetAttackAngle(Attacker));
+	ReduceHp(Damage);
+}
+
+float ACharacterBase::GetAttackAngle(AActor * Attacker)
+{
+	FRotator AtoB = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), Attacker->GetActorLocation());
+	UKismetMathLibrary::NormalizedDeltaRotator(AtoB, this->GetActorRotation());
+	return UKismetMathLibrary::NormalizedDeltaRotator(AtoB, this->GetActorRotation()).Yaw;
+}
+
+void ACharacterBase::PlayDamageMontage(float angle)
+{
+	if (angle < 0.0f) 
+	{
+		angle += 360.0f;
+	}
+	if (angle >= 315.0f || angle < 45.0f) 
+	{
+		PlayAnimMontage(HitReactFwd, 1.0f);
+	}
+	else if (angle >= 45.0f && angle < 135.0f) 
+	{
+		PlayAnimMontage(HitReactRight, 1.0f);
+	}
+	else if (angle >= 135.0f && angle < 225.0f) 
+	{
+		PlayAnimMontage(HitReactBwd, 1.0f);
+	}
+	else if (angle >= 225.0f && angle < 315.0f) 
+	{
+		PlayAnimMontage(HitReactLeft, 1.0f);
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("%f"), angle));
 }
 
 void ACharacterBase::DestoryByTimer() 
