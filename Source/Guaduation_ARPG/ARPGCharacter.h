@@ -141,6 +141,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
 		UAnimMontage* StrongAttack1 = nullptr;
 
+	//Turn speed when attack
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		float AttackTurnSpeed = 8.0f;
 	///End
 
 	///Attack Sound
@@ -169,9 +172,7 @@ public:
 
 	int FastAttackCount = 0;
 
-	//Record Walk speed before attack
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
-	float MyWalkSpeed = 0.0f;
+	
 
 	//Combo System
 	UFUNCTION(BlueprintCallable)
@@ -200,6 +201,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock System")
 		float MaxLockDistance = 1500.0f;
+
+	//Camera turn speed when Lock
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock System")
+		float LockTurnSpeed = 15.0f;
 
 	bool LineOfSightCheck(AActor* OtherActor);
 

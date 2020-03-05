@@ -102,21 +102,21 @@ void ACharacterBase::PlayDamageMontage(float angle)
 	}
 	if (angle >= 315.0f || angle < 45.0f) 
 	{
-		PlayAnimMontage(HitReactFwd, 1.0f);
+		PlayAnimMontage(HitReactFwd, 1.8f);
 	}
 	else if (angle >= 45.0f && angle < 135.0f) 
 	{
-		PlayAnimMontage(HitReactRight, 1.0f);
+		PlayAnimMontage(HitReactRight, 1.8f);
 	}
 	else if (angle >= 135.0f && angle < 225.0f) 
 	{
-		PlayAnimMontage(HitReactBwd, 1.0f);
+		PlayAnimMontage(HitReactBwd, 1.8f);
 	}
 	else if (angle >= 225.0f && angle < 315.0f) 
 	{
-		PlayAnimMontage(HitReactLeft, 1.0f);
+		PlayAnimMontage(HitReactLeft, 1.8f);
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("%f"), angle));
+	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("%f"), angle));
 }
 
 void ACharacterBase::DestoryByTimer() 

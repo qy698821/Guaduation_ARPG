@@ -3,6 +3,7 @@
 
 #include "ARPGPlayerController.h"
 #include "ARPGGameMode.h"
+#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 #include "Engine.h"
 
 void AARPGPlayerController::SetupInputComponent()
@@ -24,18 +25,64 @@ void AARPGPlayerController::SetupInputComponent()
 
 void AARPGPlayerController::MoveForward(float Value) 
 {
-	const FRotator Rotation = this->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	this->GetCharacter()->AddMovementInput(Direction, Value);
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr) 
+	{
+		float Delta = GetWorld()->DeltaTimeSeconds;
+		//Change direction when character is attacking
+		if (CharacterPtr->IsAttacking) 
+		{
+			FRotator NewRotation = CharacterPtr->GetActorRotation();
+			if (Value > 0.5f) 
+			{
+				NewRotation.Yaw = this->GetControlRotation().Yaw;
+				CharacterPtr->SetActorRelativeRotation(UKismetMathLibrary::RInterpTo(CharacterPtr->GetActorRotation(), NewRotation, Delta, CharacterPtr->AttackTurnSpeed));
+			}
+			else if (Value < -0.5f) 
+			{
+				NewRotation.Yaw = this->GetControlRotation().Yaw + 180.0f;
+				CharacterPtr->SetActorRelativeRotation(UKismetMathLibrary::RInterpTo(CharacterPtr->GetActorRotation(), NewRotation, Delta, CharacterPtr->AttackTurnSpeed));
+			}
+		}
+		else 
+		{
+			const FRotator Rotation = this->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			this->GetCharacter()->AddMovementInput(Direction, Value);
+		}
+	}
 }
 
 void AARPGPlayerController::MoveRight(float Value) 
 {
-	const FRotator Rotation = this->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	this->GetCharacter()->AddMovementInput(Direction, Value);
+
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr)
+	{
+		if (CharacterPtr->IsAttacking)
+		{
+			float Delta = GetWorld()->DeltaTimeSeconds;
+			FRotator NewRotation = CharacterPtr->GetActorRotation();
+			if (Value > 0.5f)
+			{
+				NewRotation.Yaw = this->GetControlRotation().Yaw + 90.0f;
+				CharacterPtr->SetActorRelativeRotation(UKismetMathLibrary::RInterpTo(CharacterPtr->GetActorRotation(), NewRotation, Delta, CharacterPtr->AttackTurnSpeed));
+			}
+			else if (Value < -0.5f)
+			{
+				NewRotation.Yaw = this->GetControlRotation().Yaw + 270.0f;
+				CharacterPtr->SetActorRelativeRotation(UKismetMathLibrary::RInterpTo(CharacterPtr->GetActorRotation(), NewRotation, Delta, CharacterPtr->AttackTurnSpeed));
+			}
+		}
+		else
+		{
+			const FRotator Rotation = this->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			this->GetCharacter()->AddMovementInput(Direction, Value);
+		}
+	}
 }
 
 void AARPGPlayerController::Turn(float Value)

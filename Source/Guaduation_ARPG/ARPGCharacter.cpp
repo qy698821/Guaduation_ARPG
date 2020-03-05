@@ -16,7 +16,6 @@ AARPGCharacter::AARPGCharacter()
 	ARPGCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ARPGCamera"));
 	ARPGSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("ARPGSpringArm"));
 
-	MyWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	ARPGSpringArm->SetupAttachment(RootComponent);
 	ARPGCamera->SetupAttachment(ARPGSpringArm, USpringArmComponent::SocketName);
 
@@ -306,7 +305,7 @@ void AARPGCharacter::SetCameraRotation(float DeltaTime)
 	End.Roll = Start.Roll;
 	End.Pitch = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), CurrentEnemy->GetActorLocation()).Pitch;
 	End.Yaw = UKismetMathLibrary::FindLookAtRotation(ARPGCamera->GetComponentLocation(), CurrentEnemy->GetActorLocation()).Yaw;
-	this->GetController()->SetControlRotation(UKismetMathLibrary::RInterpTo(Start, End, DeltaTime, 15.0f));
+	this->GetController()->SetControlRotation(UKismetMathLibrary::RInterpTo(Start, End, DeltaTime, LockTurnSpeed));
 
 	if (!(GetDistanceTo(CurrentEnemy) <= MaxLockDistance && LineOfSightCheck(CurrentEnemy)))
 	{
