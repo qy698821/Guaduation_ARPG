@@ -62,15 +62,13 @@ void AEnemyBase::LockOff()
 	LocalCharacter = nullptr;
 }
 
-void AEnemyBase::Tick(float DeltaTime)
+void AEnemyBase::LockTick()
 {
-	Super::Tick(DeltaTime);
-
 	//Set hp widget face to player
-	if (IsLocked) 
+	if (IsLocked)
 	{
 		AARPGCharacter* Ptr = Cast<AARPGCharacter>(LocalCharacter);
-		if (Ptr) 
+		if (Ptr)
 		{
 			FRotator Start = HpWidget->GetComponentRotation();
 			FRotator End;
@@ -80,5 +78,12 @@ void AEnemyBase::Tick(float DeltaTime)
 			HpWidget->SetRelativeRotation(End);
 		}
 	}
+}
+
+void AEnemyBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	LockTick();
 
 }

@@ -32,8 +32,11 @@ public:
 
 	bool IsLocked = false;
 
-	void Locked(ACharacter* CharacterPtr);
+	//lock function
+	virtual void Locked(ACharacter* CharacterPtr);
 
-	void LockOff();
+	virtual void LockOff();
+
+	virtual void LockTick();
 	
 };

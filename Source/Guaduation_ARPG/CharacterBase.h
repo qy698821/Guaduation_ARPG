@@ -29,6 +29,9 @@ public:
 
 	///Character attribute
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
+		FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float HP = 1000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
@@ -92,5 +95,5 @@ public:
 	///End
 
 	//Destory by timer
-	void DestoryByTimer();
+	virtual void DestoryByTimer();
 };
