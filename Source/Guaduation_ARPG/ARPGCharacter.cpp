@@ -295,7 +295,10 @@ void AARPGCharacter::LockOn(AEnemyBase * Target)
 void AARPGCharacter::LockOff()
 {
 	IsLocked = false;
-	CurrentEnemy->LockOff();
+	if (CurrentEnemy) 
+	{
+		CurrentEnemy->LockOff();
+	}
 }
 
 void AARPGCharacter::SetCameraRotation(float DeltaTime)

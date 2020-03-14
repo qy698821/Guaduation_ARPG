@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyBase.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "Blueprint/UserWidget.h"
 #include "ARPGBoss_Kwang.generated.h"
 
@@ -16,6 +17,8 @@ class GUADUATION_ARPG_API AARPGBoss_Kwang : public AEnemyBase
 	GENERATED_BODY()
 
 public:
+	AARPGBoss_Kwang();
+
 	virtual void Locked(ACharacter* CharacterPtr) override;
 
 	virtual void LockOff() override;
@@ -28,9 +31,14 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		UUserWidget* BOSSHpBarWidget = nullptr;
 
-	UPROPERTY(BlueprintReadWrite)
-		bool StartBoss = false;
-
 	virtual void DestoryByTimer() override;
+
+	//Behavior tree
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UBehaviorTree* BehaviorTree;
+
+	//set black board isstart?
+	UFUNCTION(BlueprintCallable)
+		void Start_Boss_Battle();
 	
 };
