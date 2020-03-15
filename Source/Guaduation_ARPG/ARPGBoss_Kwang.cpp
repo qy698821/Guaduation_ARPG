@@ -67,5 +67,81 @@ void AARPGBoss_Kwang::Start_Boss_Battle()
 		FName IsStart = "IsStart";
 		Ptr->BBComponent->SetValueAsBool(IsStart, true);
 		Ptr->BBComponent->SetValueAsObject(FName("Player"), UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter());
+		CurrentPlayer = UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter();
 	}
 }
+
+void AARPGBoss_Kwang::OnFastAttack()
+{
+	if (IsAttack) 
+	{
+
+	}
+	else 
+	{
+		IsAttack = true;
+		FastAttackCount = 1;
+		this->PlayAnimMontage(FastAttack1, AttackSpeed);
+	}
+
+}
+
+void AARPGBoss_Kwang::ResetCombo()
+{
+	//this->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	FastAttackCount = 0;
+
+	//face to player
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+	FRotator Start = this->GetController()->GetControlRotation();
+	FRotator End;
+	End.Roll = Start.Roll;
+	End.Pitch = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), CurrentPlayer->GetActorLocation()).Pitch;
+	End.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentPlayer->GetActorLocation()).Yaw;
+	this->SetActorRelativeRotation(End);
+	IsAttack = false;
+}
+
+void AARPGBoss_Kwang::ComboAttackSave()
+{
+	//Exchange Combo
+	if (IsAttack) 
+	{
+		if (FastAttackCount == 0)
+		{
+			FastAttackCount = 1;
+			this->PlayAnimMontage(FastAttack1, AttackSpeed);
+			//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound1);
+		}
+		else if (FastAttackCount == 1)
+		{
+			FastAttackCount = 2;
+			this->PlayAnimMontage(FastAttack2, AttackSpeed);
+			//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound2);
+		}
+		else if (FastAttackCount == 2)
+		{
+			if (IsStep2)
+			{
+				FastAttackCount = 3;
+				this->PlayAnimMontage(FastAttack3, AttackSpeed);
+				//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
+			}
+			else
+			{
+				FastAttackCount = 0;
+				this->PlayAnimMontage(FastAttack3, AttackSpeed);
+				//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
+				//ResetCombo();
+			}
+		}
+		else if (FastAttackCount == 3)
+		{
+			FastAttackCount = 0;
+			this->PlayAnimMontage(FastAttack4, AttackSpeed);
+			//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
+			//ResetCombo();
+		}
+	}
+}
+

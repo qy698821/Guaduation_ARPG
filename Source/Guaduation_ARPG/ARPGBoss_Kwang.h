@@ -40,5 +40,45 @@ public:
 	//set black board isstart?
 	UFUNCTION(BlueprintCallable)
 		void Start_Boss_Battle();
+
+	AActor* CurrentPlayer = nullptr;
+
+	//AI attribute
+	bool IsDied = false;
+	bool IsAttack = false;
+	bool IsDamaged = false;
+	bool IsSuperArmor = false;
+	bool IsStep2 = false;
+
+	//////////////Skill 1 Fast attack
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		UAnimMontage* FastAttack1 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		UAnimMontage* FastAttack2 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		UAnimMontage* FastAttack3 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		UAnimMontage* FastAttack4 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DistanceJudgement")
+		float DistanceJudX = 800.0f;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DistanceJudgement")
+		float DistanceJudY = 200.0f;
+	//Combo System
+	UFUNCTION(BlueprintCallable)
+		void ResetCombo();
+
+	UFUNCTION(BlueprintCallable)
+		void ComboAttackSave();
+	int FastAttackCount = 0;
+
+	
+	void OnFastAttack();
+
 	
 };
