@@ -86,6 +86,26 @@ void AARPGBoss_Kwang::OnFastAttack()
 
 }
 
+void AARPGBoss_Kwang::OnSweepAttack()
+{
+	if (IsStep2) 
+	{
+
+	}
+	else 
+	{
+		if (IsAttack)
+		{
+
+		}
+		else
+		{
+			IsAttack = true;
+			this->PlayAnimMontage(SweepAttack, AttackSpeed);
+		}
+	}
+}
+
 void AARPGBoss_Kwang::ResetCombo()
 {
 	//this->GetCharacterMovement()->MaxWalkSpeed = 600.0f;

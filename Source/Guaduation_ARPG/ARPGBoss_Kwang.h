@@ -66,7 +66,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DistanceJudgement")
 		float DistanceJudX = 800.0f;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DistanceJudgement")
 		float DistanceJudY = 200.0f;
 	//Combo System
@@ -79,6 +78,13 @@ public:
 
 	
 	void OnFastAttack();
+
+	//////////////Skill 2 Sweep attack
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SweepAttack")
+		UAnimMontage* SweepAttack = nullptr;
+	
+	void OnSweepAttack();
 
 	
 };
