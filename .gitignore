@@ -72,3 +72,10 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+Content/KiteDemo/Environments/GroundTiles/RockyPath/T_GDC_StonePath_Tile_D_R.uasset
+
+Content/KiteDemo/Environments/GroundTiles/LeafyPath/T_GDC_Tiling_LeafPathStones_D_R.uasset
+
+Content/KiteDemo/Environments/GroundTiles/RockyPath/T_GDC_StonePath_Tile_N.uasset
+
