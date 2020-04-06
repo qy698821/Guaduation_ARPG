@@ -64,7 +64,7 @@ public:
 
 	///Attack Montage
 	UFUNCTION(BlueprintCallable)
-		void Damaged(AActor* Attacker, float Damage);
+	virtual	void Damaged(AActor* Attacker, float Damage);
 
 	float GetAttackAngle(AActor* Attacker);
 

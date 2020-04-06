@@ -22,6 +22,7 @@ AARPGBoss_Kwang::AARPGBoss_Kwang()
 	{
 		BehaviorTree = BehaviorTreeAssert.Object;
 	}
+	SweepAttackCD = MaxSweepAttackCD;
 
 }
 
@@ -65,9 +66,26 @@ void AARPGBoss_Kwang::Start_Boss_Battle()
 	if (Ptr) 
 	{
 		FName IsStart = "IsStart";
+		FName CanMove = "CanMove";
 		Ptr->BBComponent->SetValueAsBool(IsStart, true);
+		Ptr->BBComponent->SetValueAsBool(CanMove, true);
 		Ptr->BBComponent->SetValueAsObject(FName("Player"), UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter());
 		CurrentPlayer = UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter();
+	}
+}
+
+void AARPGBoss_Kwang::ChangeMoveStatus()
+{
+	ABoss_KwangAIController* Ptr = Cast<ABoss_KwangAIController>(this->GetController());
+	if (Ptr) 
+	{
+		float Distance = GetDistanceTo(CurrentPlayer);
+		FName CanMove = "CanMove";
+		if (SweepAttackCD >= MaxSweepAttackCD && Distance > DistanceJudY && Distance <= DistanceJudX)
+		{
+			Ptr->BBComponent->SetValueAsBool(CanMove, false);
+			return;
+		}
 	}
 }
 
@@ -100,10 +118,46 @@ void AARPGBoss_Kwang::OnSweepAttack()
 		}
 		else
 		{
+			IsSuperArmor = true;
 			IsAttack = true;
 			this->PlayAnimMontage(SweepAttack, AttackSpeed);
+			SweepAttackCD = 0.0f;
+			ResetCD(AtributeCD::SWEEPATTACK);
+
 		}
 	}
+}
+
+void AARPGBoss_Kwang::ResetCD(AtributeCD CDName)
+{
+	switch (CDName) 
+	{
+	case FASTATTACK:
+		break;
+	case SWEEPATTACK:
+		GetWorld()->GetTimerManager().SetTimer(ResetSweepAttackCDByTimer, this, &AARPGBoss_Kwang::ResetSweepAttackCD, 0.1f, true, -1);
+	}
+}
+
+void AARPGBoss_Kwang::ResetSweepAttackCD()
+{
+	if (SweepAttackCD < MaxSweepAttackCD) 
+	{
+		SweepAttackCD += 0.1f;
+	}
+	else 
+	{
+		SweepAttackCD = MaxSweepAttackCD;
+		if (ResetSweepAttackCDByTimer.IsValid()) 
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetSweepAttackCDByTimer);
+		}
+	}
+}
+
+void AARPGBoss_Kwang::SprintToPlayer()
+{
+	AddActorWorldOffset(SprintDeltaVector);
 }
 
 void AARPGBoss_Kwang::ResetCombo()
@@ -119,7 +173,14 @@ void AARPGBoss_Kwang::ResetCombo()
 	End.Pitch = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), CurrentPlayer->GetActorLocation()).Pitch;
 	End.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentPlayer->GetActorLocation()).Yaw;
 	this->SetActorRelativeRotation(End);
+	ABoss_KwangAIController* Ptr = Cast<ABoss_KwangAIController>(this->GetController());
+	if (Ptr)
+	{
+		FName CanMove = "CanMove";
+		Ptr->BBComponent->SetValueAsBool(CanMove, true);
+	}
 	IsAttack = false;
+	IsSuperArmor = false;
 }
 
 void AARPGBoss_Kwang::ComboAttackSave()
@@ -144,7 +205,7 @@ void AARPGBoss_Kwang::ComboAttackSave()
 			if (IsStep2)
 			{
 				FastAttackCount = 3;
-				this->PlayAnimMontage(FastAttack3, AttackSpeed);
+				this->PlayAnimMontage(FastAttack3Step2, AttackSpeed);
 				//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
 			}
 			else
@@ -162,6 +223,16 @@ void AARPGBoss_Kwang::ComboAttackSave()
 			//UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
 			//ResetCombo();
 		}
+	}
+}
+
+void AARPGBoss_Kwang::Damaged(AActor* Attacker, float Damage) 
+{
+	PlayDamageMontage(GetAttackAngle(Attacker));
+	ReduceHp(Damage);
+	if (HP <= MaxHP / 2) 
+	{
+		IsStep2 = true;
 	}
 }
 

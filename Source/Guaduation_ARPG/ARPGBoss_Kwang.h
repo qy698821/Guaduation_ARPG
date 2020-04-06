@@ -11,6 +11,11 @@
 /**
  * 
  */
+enum AtributeCD 
+{
+	FASTATTACK,
+	SWEEPATTACK
+};
 UCLASS()
 class GUADUATION_ARPG_API AARPGBoss_Kwang : public AEnemyBase
 {
@@ -27,6 +32,8 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	virtual	void Damaged(AActor* Attacker, float Damage) override;
+
 	//Boss Hp ui
 	UPROPERTY(BlueprintReadWrite)
 		UUserWidget* BOSSHpBarWidget = nullptr;
@@ -40,6 +47,8 @@ public:
 	//set black board isstart?
 	UFUNCTION(BlueprintCallable)
 		void Start_Boss_Battle();
+
+	void ChangeMoveStatus();
 
 	AActor* CurrentPlayer = nullptr;
 
@@ -59,6 +68,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
 		UAnimMontage* FastAttack3 = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		UAnimMontage* FastAttack3Step2 = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
 		UAnimMontage* FastAttack4 = nullptr;
@@ -85,6 +97,23 @@ public:
 		UAnimMontage* SweepAttack = nullptr;
 	
 	void OnSweepAttack();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SweepAttack")
+		float MaxSweepAttackCD = 6.0f;
+
+	float SweepAttackCD = 6.0f;
+
+	FTimerHandle ResetSweepAttackCDByTimer;
+
+	void ResetCD(AtributeCD CDName);
+
+	void ResetSweepAttackCD();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector SprintDeltaVector;
+
+	UFUNCTION(BlueprintCallable)
+		void SprintToPlayer();
 
 	
 };
