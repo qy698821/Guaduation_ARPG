@@ -23,6 +23,9 @@ AARPGBoss_Kwang::AARPGBoss_Kwang()
 		BehaviorTree = BehaviorTreeAssert.Object;
 	}
 	SweepAttackCD = MaxSweepAttackCD;
+	RemoteAttackCD = MaxRemoteAttackCD;
+	ChangedStepCD = MaxChangedStepCD;
+	SupperSweepCD = MaxSupperSweepCD;
 
 }
 
@@ -86,6 +89,16 @@ void AARPGBoss_Kwang::ChangeMoveStatus()
 			Ptr->BBComponent->SetValueAsBool(CanMove, false);
 			return;
 		}
+		if (Distance > DistanceJudX && RemoteAttackCD >= MaxRemoteAttackCD) 
+		{
+			Ptr->BBComponent->SetValueAsBool(CanMove, false);
+			return;
+		}
+		if (Distance <= DistanceJudY && SupperSweepCD >= MaxSupperSweepCD) 
+		{
+			Ptr->BBComponent->SetValueAsBool(CanMove, false);
+			return;
+		}
 	}
 }
 
@@ -106,24 +119,85 @@ void AARPGBoss_Kwang::OnFastAttack()
 
 void AARPGBoss_Kwang::OnSweepAttack()
 {
-	if (IsStep2) 
+	if (IsAttack)
 	{
 
 	}
-	else 
+	else
 	{
-		if (IsAttack)
-		{
+		IsSuperArmor = true;
+		IsAttack = true;
+		this->PlayAnimMontage(SweepAttack, AttackSpeed);
+		SweepAttackCD = 0.0f;
+		ResetCD(AtributeCD::SWEEPATTACK);
 
+	}
+}
+
+void AARPGBoss_Kwang::OnChangedStep()
+{
+	if (IsAttack || IsChanged)
+	{
+
+	}
+	else
+	{
+		IsSuperArmor = true;
+		IsAttack = true;
+		this->PlayAnimMontage(ChangedStep, AttackSpeed);
+		ChangedStepCD = 0.0f;
+		ResetCD(AtributeCD::CHANGEDSTEP);
+		ABoss_KwangAIController* Ptr = Cast<ABoss_KwangAIController>(this->GetController());
+		IsChanged = true;
+
+	}
+}
+
+void AARPGBoss_Kwang::ResetChangedStepCD()
+{
+	if (ChangedStepCD < MaxChangedStepCD)
+	{
+		ChangedStepCD += 0.1f;
+	}
+	else
+	{
+		ChangedStepCD = MaxChangedStepCD;
+		if (ResetChangedStepCDByTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetChangedStepCDByTimer);
 		}
-		else
-		{
-			IsSuperArmor = true;
-			IsAttack = true;
-			this->PlayAnimMontage(SweepAttack, AttackSpeed);
-			SweepAttackCD = 0.0f;
-			ResetCD(AtributeCD::SWEEPATTACK);
+	}
+}
 
+void AARPGBoss_Kwang::OnSupperSweep()
+{
+	if (IsAttack)
+	{
+
+	}
+	else
+	{
+		IsSuperArmor = true;
+		IsAttack = true;
+		this->PlayAnimMontage(SupperSweep, AttackSpeed);
+		SupperSweepCD = 0.0f;
+		ResetCD(AtributeCD::SUPPERSWEEP);
+
+	}
+}
+
+void AARPGBoss_Kwang::ResetSupperSweepCD()
+{
+	if (SupperSweepCD < MaxSupperSweepCD)
+	{
+		SupperSweepCD += 0.1f;
+	}
+	else
+	{
+		SupperSweepCD = MaxSupperSweepCD;
+		if (ResetSupperSweepCDByTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetSupperSweepCDByTimer);
 		}
 	}
 }
@@ -136,6 +210,16 @@ void AARPGBoss_Kwang::ResetCD(AtributeCD CDName)
 		break;
 	case SWEEPATTACK:
 		GetWorld()->GetTimerManager().SetTimer(ResetSweepAttackCDByTimer, this, &AARPGBoss_Kwang::ResetSweepAttackCD, 0.1f, true, -1);
+		break;
+	case REMOTEATTACT:
+		GetWorld()->GetTimerManager().SetTimer(ResetRemoteAttackCDByTimer, this, &AARPGBoss_Kwang::ResetRemoteAttackCD, 0.1f, true, -1);
+		break;
+	case CHANGEDSTEP:
+		GetWorld()->GetTimerManager().SetTimer(ResetChangedStepCDByTimer, this, &AARPGBoss_Kwang::ResetChangedStepCD, 0.1f, true, -1);
+		break;
+	case SUPPERSWEEP:
+		GetWorld()->GetTimerManager().SetTimer(ResetSupperSweepCDByTimer, this, &AARPGBoss_Kwang::ResetSupperSweepCD, 0.1f, true, -1);
+		break;
 	}
 }
 
@@ -158,6 +242,49 @@ void AARPGBoss_Kwang::ResetSweepAttackCD()
 void AARPGBoss_Kwang::SprintToPlayer()
 {
 	AddActorWorldOffset(SprintDeltaVector);
+}
+
+void AARPGBoss_Kwang::OnRemoteAttack()
+{
+	if (IsAttack)
+	{
+
+	}
+	else
+	{
+		if (IsStep2) 
+		{
+			IsSuperArmor = true;
+			IsAttack = true;
+			this->PlayAnimMontage(RemoteAttack2, AttackSpeed);
+			RemoteAttackCD = 0.0f;
+			ResetCD(AtributeCD::REMOTEATTACT);
+		}
+		else 
+		{
+			IsSuperArmor = true;
+			IsAttack = true;
+			this->PlayAnimMontage(RemoteAttack, AttackSpeed);
+			RemoteAttackCD = 0.0f;
+			ResetCD(AtributeCD::REMOTEATTACT);
+		}
+	}
+}
+
+void AARPGBoss_Kwang::ResetRemoteAttackCD()
+{
+	if (RemoteAttackCD < MaxRemoteAttackCD)
+	{
+		RemoteAttackCD += 0.1f;
+	}
+	else
+	{
+		RemoteAttackCD = MaxRemoteAttackCD;
+		if (ResetRemoteAttackCDByTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetRemoteAttackCDByTimer);
+		}
+	}
 }
 
 void AARPGBoss_Kwang::ResetCombo()

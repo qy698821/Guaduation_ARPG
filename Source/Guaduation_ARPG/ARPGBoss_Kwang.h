@@ -14,7 +14,10 @@
 enum AtributeCD 
 {
 	FASTATTACK,
-	SWEEPATTACK
+	SWEEPATTACK,
+	REMOTEATTACT,
+	CHANGEDSTEP,
+	SUPPERSWEEP
 };
 UCLASS()
 class GUADUATION_ARPG_API AARPGBoss_Kwang : public AEnemyBase
@@ -58,6 +61,7 @@ public:
 	bool IsDamaged = false;
 	bool IsSuperArmor = false;
 	bool IsStep2 = false;
+	bool IsChanged = false;
 
 	//////////////Skill 1 Fast attack
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
@@ -115,5 +119,57 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SprintToPlayer();
 
-	
+	//////////////Skill 3 Remote attack
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RemoteAttack")
+		UAnimMontage* RemoteAttack = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RemoteAttack")
+		UAnimMontage* RemoteAttack2 = nullptr;
+
+	void OnRemoteAttack();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RemoteAttack")
+		float MaxRemoteAttackCD = 6.0f;
+
+	float RemoteAttackCD = 6.0f;
+
+	FTimerHandle ResetRemoteAttackCDByTimer;
+
+	void ResetRemoteAttackCD();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector RemoteTargetVector;
+
+	//////////////Skill 4 ChangedStep
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChangedStep")
+		UAnimMontage* ChangedStep = nullptr;
+
+	void OnChangedStep();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChangedStep")
+		float MaxChangedStepCD = 6.0f;
+
+	float ChangedStepCD = 6.0f;
+
+	FTimerHandle ResetChangedStepCDByTimer;
+
+	void ResetChangedStepCD();
+
+	//////////////Skill 5 SupperSweep
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SupperSweep")
+		UAnimMontage* SupperSweep = nullptr;
+
+	void OnSupperSweep();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SupperSweep")
+		float MaxSupperSweepCD = 6.0f;
+
+	float SupperSweepCD = 6.0f;
+
+	FTimerHandle ResetSupperSweepCDByTimer;
+
+	void ResetSupperSweepCD();
+
 };
