@@ -8,7 +8,7 @@ public class Guaduation_ARPG : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "AIModule", "GameplayTasks", "UMG", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "AIModule", "NavigationSystem", "GameplayTasks", "UMG", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
