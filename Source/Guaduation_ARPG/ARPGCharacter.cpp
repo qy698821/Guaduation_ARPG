@@ -114,6 +114,16 @@ void AARPGCharacter::AddHpByTimer()
 	}
 }
 
+bool AARPGCharacter::BuyObject(float Cost)
+{
+	if (Money >= Cost) 
+	{
+		Money -= Cost;
+		return true;
+	}
+	return false;
+}
+
 void AARPGCharacter::OnFastAttack()
 {
 	if (IsAttacking) 

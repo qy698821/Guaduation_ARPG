@@ -30,7 +30,10 @@ public:
 
 	UFUNCTION()
 		void LookUp(float Value);
+	//open and close inventory
 
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
+		void OpenAndCloseInventory();
 	//Inventory save
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FInventoryItem> Inventory;
@@ -56,6 +59,7 @@ public:
 	int Num_Inventory = 40;
 
 	//Add Invemtory By ID
+	UFUNCTION(BlueprintCallable)
 	void AddInventoryByID(FName ID);
 
 	//Check if The IDInventory have
