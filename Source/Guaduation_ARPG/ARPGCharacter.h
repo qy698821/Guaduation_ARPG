@@ -46,6 +46,9 @@ public:
 	int Number;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Cost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -100,6 +103,9 @@ public:
 		float Defense = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
+		float Money = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float AttackSpeed = 0.8f;
 
 	///End
@@ -145,6 +151,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
 		float AttackTurnSpeed = 8.0f;
 	///End
+
+	///Cost Function
+	UFUNCTION(BlueprintCallable)
+		bool BuyObject(float Cost);
 
 	///Attack Sound
 
