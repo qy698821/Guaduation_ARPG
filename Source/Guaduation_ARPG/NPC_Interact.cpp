@@ -65,6 +65,7 @@ void ANPC_Interact::DialogThink(APlayerController* Controller)
 	else 
 	{
 		OpenDialogWidget();
+		//First dialog
 		if (NumofFirstDialog <= FirstDialogArray.Num())
 		{
 			if (NumofFirstDialog == FirstDialogArray.Num())
@@ -79,6 +80,7 @@ void ANPC_Interact::DialogThink(APlayerController* Controller)
 				NumofFirstDialog++;
 			}
 		}
+		//loop
 		else
 		{
 			if (ShouldCloseWidget) 
