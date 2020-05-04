@@ -18,7 +18,13 @@ ANPC_Interact::ANPC_Interact()
 
 void ANPC_Interact::ObjectInteract(APlayerController * Controller)
 {
-	ObjectInteractBlueprint(Controller);
+	DialogThink(Controller);
+}
+
+void ANPC_Interact::EndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int OtherBodyIndex)
+{
+	Super::EndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+	CloseDialogWidget();
 }
 
 void ANPC_Interact::InitShop() 
@@ -38,5 +44,55 @@ void ANPC_Interact::InitShop()
 			ShopItem.Add(*ItemToAdd);
 		}
 
+	}
+}
+
+void ANPC_Interact::SetCurrentDialog(FString String)
+{
+	CurrentDialog = String;
+}
+
+void ANPC_Interact::DialogThink(APlayerController* Controller)
+{
+	if (IsShopOpend) 
+	{
+		return;
+	}
+	if (IsEndOfDialog) 
+	{
+		CloseDialogWidget();
+	}
+	else 
+	{
+		OpenDialogWidget();
+		//First dialog
+		if (NumofFirstDialog <= FirstDialogArray.Num())
+		{
+			if (NumofFirstDialog == FirstDialogArray.Num())
+			{
+				CloseDialogWidget();
+				ObjectInteractBlueprint(Controller);
+				NumofFirstDialog++;
+			}
+			else 
+			{
+				SetCurrentDialog(FirstDialogArray[NumofFirstDialog]);
+				NumofFirstDialog++;
+			}
+		}
+		//loop
+		else
+		{
+			if (ShouldCloseWidget) 
+			{
+				CloseDialogWidget();
+				ObjectInteractBlueprint(Controller);
+			}
+			else 
+			{
+				SetCurrentDialog(LoopDialog);
+				ShouldCloseWidget = true;
+			}
+		}
 	}
 }
