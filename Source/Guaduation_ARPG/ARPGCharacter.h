@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
 #include "EnemyBase.h"
+#include "Task_1Actor.h"
 #include "ARPGCharacter.generated.h"
 
 //Inventory item attribute
@@ -234,4 +235,9 @@ public:
 	//Bind Switch Action
 	void Switch(int value);
 	///End
+
+	//////Task System//////
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TaskSystem")
+		ATask_1Actor* Task1;
 };

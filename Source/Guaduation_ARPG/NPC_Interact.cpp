@@ -4,6 +4,8 @@
 #include "NPC_Interact.h"
 #include "ARPGPlayerController.h"
 #include "ARPGGameMode.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "ARPGCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -72,6 +74,9 @@ void ANPC_Interact::DialogThink(APlayerController* Controller)
 			{
 				CloseDialogWidget();
 				ObjectInteractBlueprint(Controller);
+				ACharacter* CharacterPtr = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
+				AARPGCharacter* AARPGCharacterPtr = Cast<AARPGCharacter>(CharacterPtr);
+				AARPGCharacterPtr->Task1->ChangeStep(1);
 				NumofFirstDialog++;
 			}
 			else 
