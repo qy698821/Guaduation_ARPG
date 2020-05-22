@@ -77,6 +77,7 @@ void ANPC_Interact::DialogThink(APlayerController* Controller)
 				ACharacter* CharacterPtr = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
 				AARPGCharacter* AARPGCharacterPtr = Cast<AARPGCharacter>(CharacterPtr);
 				AARPGCharacterPtr->Task1->ChangeStep(1);
+				DeleteBlockwall();
 				NumofFirstDialog++;
 			}
 			else 

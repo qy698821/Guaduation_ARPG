@@ -78,5 +78,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "DialogSystem")
 		bool IsEndOfDialog = false;
 
+	//Delete blockwall
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void DeleteBlockwall();
+
 
 };
