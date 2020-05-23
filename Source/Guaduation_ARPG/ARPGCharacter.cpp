@@ -21,6 +21,10 @@ AARPGCharacter::AARPGCharacter()
 
 	ObjectTypes.Add(ObjectTypeQuery1);
 	ObjectTypes.Add(ObjectTypeQuery2);
+
+	CurrentDodgeCD = DodgeCD;
+	DodgeDirection.Add(1.0f);
+	DodgeDirection.Add(0.0f);
 }
 
 // Called when the game starts or when spawned
@@ -164,6 +168,7 @@ void AARPGCharacter::ResetCombo()
 	FastAttackCount = 0;
 	IsAttacking = false;
 	SaveAttack = false;
+	IsStartDodge = false;
 }
 
 void AARPGCharacter::ComboAttackSave()
@@ -362,6 +367,105 @@ void AARPGCharacter::Switch(int value)
 			}
 			LockOff();
 			LockOn(LocalEnemiseKey[CurrentIndex]);
+		}
+	}
+}
+
+void AARPGCharacter::StartDodge()
+{
+	if (CurrentDodgeCD >= DodgeCD) 
+	{
+		IsStartDodge = true;
+		Dodge(DodgeDirection[0], DodgeDirection[1]);
+		this->PlayAnimMontage(DodgeMontage, DodgeSpeed);
+		CurrentDodgeCD = 0.0f;
+		GetWorld()->GetTimerManager().SetTimer(ResetDodgeCDByTimer, this, &AARPGCharacter::ResetDodgeCD, 0.1f, true, -1);
+	}
+}
+
+void AARPGCharacter::Dodge(float forward, float right)
+{
+	CurrentDodgeTime = DodgeTime;
+	float Delta = GetWorld()->DeltaTimeSeconds;
+	DodgeRotation = GetActorRotation();
+	if (forward == 0.0f && right == 0.0f) 
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw;
+	}
+	//forward
+	else if (forward > 0.5f && right == 0.0f) 
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw;
+	}
+	//forward and right
+	else if (forward > 0.5f && right > 0.5f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 45.0f;
+	}
+	//forward and left
+	else if (forward > 0.5f && right < -0.5f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 315.f;
+	}
+	//back
+	else if (forward < -0.5f && right == 0.0f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 180.0f;
+	}
+	//back and right
+	else if (forward < -0.5f && right > 0.5f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 135.0f;
+	}
+	//back and left
+	else if (forward < -0.5f && right < -0.5f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 225.0f;
+	}
+	//right
+	else if (forward == 0.0f && right > 0.5f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 90.0f;
+	}
+	//left
+	else if (forward == 0.0f && right < -0.5f)
+	{
+		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 270.0f;
+	}
+	SetActorRelativeRotation(DodgeRotation);
+	DodgeLocation = UKismetMathLibrary::GetForwardVector(DodgeRotation);
+	GetWorld()->GetTimerManager().SetTimer(DodgeMoveTimer, this, &AARPGCharacter::DodgeMove, 0.01f, true, -1.0f);
+	AddActorWorldOffset(DodgeLocation * 100);
+}
+
+void AARPGCharacter::DodgeMove()
+{
+	if (CurrentDodgeTime > 0.0f) 
+	{
+		AddActorWorldOffset(DodgeLocation * DodgeLength);
+		CurrentDodgeTime -= 0.01f;
+	}
+	else 
+	{
+		if (DodgeMoveTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(DodgeMoveTimer);
+		}
+	}
+}
+
+void AARPGCharacter::ResetDodgeCD()
+{
+	if (CurrentDodgeCD < DodgeCD)
+	{
+		CurrentDodgeCD += 0.1f;
+	}
+	else
+	{
+		CurrentDodgeCD = DodgeCD;
+		if (ResetDodgeCDByTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetDodgeCDByTimer);
 		}
 	}
 }

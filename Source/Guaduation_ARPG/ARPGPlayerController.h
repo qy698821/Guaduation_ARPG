@@ -68,10 +68,10 @@ public:
 	//Add Inventory Objeck
 	void AddInventoryObjeck(FInventoryItem* Item);
 
-	//Jump
-	void StartJump();
+	//Dodge
+	void StartDodge();
 
-	void StopJump();
+	//!void StopJump();
 
 	//Reduce Num of Inventory
 	UFUNCTION(BlueprintCallable)

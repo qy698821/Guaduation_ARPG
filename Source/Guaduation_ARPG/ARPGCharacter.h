@@ -240,4 +240,51 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TaskSystem")
 		ATask_1Actor* Task1;
+
+	//////END//////
+
+
+	//////// Dodge  ///////
+
+	UPROPERTY(BlueprintReadWrite, Category = "Dodge")
+		bool IsStartDodge = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dodge")
+		UAnimMontage* DodgeMontage = nullptr;
+
+	UFUNCTION(BlueprintCallable)
+		void StartDodge();
+
+	void Dodge(float forward, float right);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dodge")
+		float DodgeCD = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dodge")
+		float DodgeSpeed = 2.0f;
+
+	float CurrentDodgeCD = 0.0f;
+
+	FTimerHandle ResetDodgeCDByTimer;
+
+	void ResetDodgeCD();
+
+	TArray<float > DodgeDirection;
+
+	FRotator DodgeRotation;
+	FVector DodgeLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dodge")
+		float DodgeTime = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dodge")
+		float DodgeLength = 30.0f;
+
+	float CurrentDodgeTime = 0.0f;
+
+	void DodgeMove();
+
+	FTimerHandle DodgeMoveTimer;
+
+	/////// END //////////
 };

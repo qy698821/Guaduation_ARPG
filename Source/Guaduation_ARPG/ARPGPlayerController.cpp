@@ -15,8 +15,8 @@ void AARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveForward", this, &AARPGPlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AARPGPlayerController::MoveRight);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AARPGPlayerController::ObjectInteract);
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AARPGPlayerController::StartJump);
-	InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
+	InputComponent->BindAction("Dodge", IE_Pressed, this, &AARPGPlayerController::StartDodge);
+	//!InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
 	InputComponent->BindAction("FastAttack", IE_Pressed, this, &AARPGPlayerController::OnFastAttack);
 	InputComponent->BindAction("LockEnemy", IE_Pressed, this, &AARPGPlayerController::LockEnemy);
 	InputComponent->BindAction("SwitchLeft", IE_Pressed, this, &AARPGPlayerController::SwitchLeft);
@@ -28,6 +28,11 @@ void AARPGPlayerController::MoveForward(float Value)
 	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
 	if (CharacterPtr) 
 	{
+		CharacterPtr->DodgeDirection[0] = Value;
+		if (CharacterPtr->IsStartDodge) 
+		{
+			return;
+		}
 		float Delta = GetWorld()->DeltaTimeSeconds;
 		//Change direction when character is attacking
 		if (CharacterPtr->IsAttacking) 
@@ -60,6 +65,11 @@ void AARPGPlayerController::MoveRight(float Value)
 	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
 	if (CharacterPtr)
 	{
+		CharacterPtr->DodgeDirection[1] = Value;
+		if (CharacterPtr->IsStartDodge)
+		{
+			return;
+		}
 		if (CharacterPtr->IsAttacking)
 		{
 			float Delta = GetWorld()->DeltaTimeSeconds;
@@ -170,15 +180,19 @@ void AARPGPlayerController::AddInventoryObjeck(FInventoryItem* Item)
 	}
 }
 
-void AARPGPlayerController::StartJump()
+void AARPGPlayerController::StartDodge()
 {
-	this->GetCharacter()->bPressedJump = true;
+	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
+	if (CharacterPtr) 
+	{
+		CharacterPtr->StartDodge();
+	}
 }
 
-void AARPGPlayerController::StopJump()
-{
-	this->GetCharacter()->bPressedJump = false;
-}
+//!void AARPGPlayerController::StopJump()
+//!{
+//!	this->GetCharacter()->bPressedJump = false;
+//!}
 
 void AARPGPlayerController::AddInventoryByID(FName ID) 
 {
