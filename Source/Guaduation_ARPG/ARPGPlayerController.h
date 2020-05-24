@@ -71,7 +71,9 @@ public:
 	//Dodge
 	void StartDodge();
 
-	//!void StopJump();
+	void StartJump();
+
+	void StopJump();
 
 	//Reduce Num of Inventory
 	UFUNCTION(BlueprintCallable)

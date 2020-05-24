@@ -16,7 +16,8 @@ void AARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &AARPGPlayerController::MoveRight);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AARPGPlayerController::ObjectInteract);
 	InputComponent->BindAction("Dodge", IE_Pressed, this, &AARPGPlayerController::StartDodge);
-	//!InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AARPGPlayerController::StartJump);
+	InputComponent->BindAction("Jump", IE_Released, this, &AARPGPlayerController::StopJump);
 	InputComponent->BindAction("FastAttack", IE_Pressed, this, &AARPGPlayerController::OnFastAttack);
 	InputComponent->BindAction("LockEnemy", IE_Pressed, this, &AARPGPlayerController::LockEnemy);
 	InputComponent->BindAction("SwitchLeft", IE_Pressed, this, &AARPGPlayerController::SwitchLeft);
@@ -189,10 +190,15 @@ void AARPGPlayerController::StartDodge()
 	}
 }
 
-//!void AARPGPlayerController::StopJump()
-//!{
-//!	this->GetCharacter()->bPressedJump = false;
-//!}
+void AARPGPlayerController::StartJump()
+{
+	this->GetCharacter()->bPressedJump = true;
+}
+
+void AARPGPlayerController::StopJump()
+{
+	this->GetCharacter()->bPressedJump = false;
+}
 
 void AARPGPlayerController::AddInventoryByID(FName ID) 
 {
