@@ -10,8 +10,9 @@ void APickUp::ObjectInteract(APlayerController* Controller)
 	if (Ptr) 
 	{
 		Ptr->AddInventoryByID(ID);
-		this->Destroy();
 		Ptr->LoadWidget();
+		Extra();
+		this->Destroy();
 	}
 }
 

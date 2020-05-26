@@ -26,5 +26,11 @@ public:
 	//Actor be used
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
 		void OnUse();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void Extra();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString GetInfo;
 	
 };
