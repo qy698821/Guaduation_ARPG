@@ -30,7 +30,7 @@ void AARPGPlayerController::MoveForward(float Value)
 	if (CharacterPtr) 
 	{
 		CharacterPtr->DodgeDirection[0] = Value;
-		if (CharacterPtr->IsStartDodge) 
+		if (CharacterPtr->IsStartDodge || CharacterPtr->IsDamaged)
 		{
 			return;
 		}
@@ -67,7 +67,7 @@ void AARPGPlayerController::MoveRight(float Value)
 	if (CharacterPtr)
 	{
 		CharacterPtr->DodgeDirection[1] = Value;
-		if (CharacterPtr->IsStartDodge)
+		if (CharacterPtr->IsStartDodge || CharacterPtr->IsDamaged)
 		{
 			return;
 		}
@@ -161,7 +161,10 @@ bool AARPGPlayerController::CheckIDHave(FName ID)
 	{
 		if (n.ItemID == ID) 
 		{
-			n.Number++;
+			if (n.Number < MaxHpPotion) 
+			{
+				n.Number++;
+			}
 			return true;
 		}
 	}
@@ -244,6 +247,10 @@ void AARPGPlayerController::OnFastAttack()
 	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
 	if (CharacterPtr) 
 	{
+		if (CharacterPtr->IsDamaged) 
+		{
+			return;
+		}
 		CharacterPtr->OnFastAttack();
 	}
 }

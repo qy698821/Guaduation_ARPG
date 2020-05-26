@@ -98,5 +98,6 @@ public:
 	//Bind SwitchRight Action
 	void SwitchRight();
 
-	
+	UPROPERTY(BlueprintReadWrite)
+		int MaxHpPotion = 3;
 };

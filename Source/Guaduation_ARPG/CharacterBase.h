@@ -96,4 +96,13 @@ public:
 
 	//Destory by timer
 	virtual void DestoryByTimer();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetDeathBB();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetAttackBB();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void ReSetAttackBB();
 };

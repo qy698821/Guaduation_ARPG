@@ -25,6 +25,7 @@ AARPGCharacter::AARPGCharacter()
 	CurrentDodgeCD = DodgeCD;
 	DodgeDirection.Add(1.0f);
 	DodgeDirection.Add(0.0f);
+	HP = MaxHP;
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +54,48 @@ void AARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void AARPGCharacter::Damaged(AActor * Attacker, float Damage)
+{
+	if (IsStartDodge)
+	{
+		return;
+	}
+	PlayDamageMontage(GetAttackAngle(Attacker));
+	ReduceHp(Damage);
+	IsDamaged = true;
+}
+
+float AARPGCharacter::GetAttackAngle(AActor * Attacker)
+{
+	FRotator AtoB = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), Attacker->GetActorLocation());
+	UKismetMathLibrary::NormalizedDeltaRotator(AtoB, this->GetActorRotation());
+	return UKismetMathLibrary::NormalizedDeltaRotator(AtoB, this->GetActorRotation()).Yaw;
+}
+
+void AARPGCharacter::PlayDamageMontage(float angle)
+{
+	if (angle < 0.0f)
+	{
+		angle += 360.0f;
+	}
+	if (angle >= 315.0f || angle < 45.0f)
+	{
+		PlayAnimMontage(HitReactFwd, 1.8f);
+	}
+	else if (angle >= 45.0f && angle < 135.0f)
+	{
+		PlayAnimMontage(HitReactRight, 1.8f);
+	}
+	else if (angle >= 135.0f && angle < 225.0f)
+	{
+		PlayAnimMontage(HitReactBwd, 1.8f);
+	}
+	else if (angle >= 225.0f && angle < 315.0f)
+	{
+		PlayAnimMontage(HitReactLeft, 1.8f);
+	}
+}
+
 void AARPGCharacter::ReduceHp(float Damage)
 {
 	if (UnrealReduceTier.IsValid())
@@ -68,7 +111,8 @@ void AARPGCharacter::ReduceHp(float Damage)
 	else 
 	{
 		HP = 0;
-		GetWorld()->GetTimerManager().SetTimer(UnrealReduceTier, this, &AARPGCharacter::ReduceHpByTimer, 0.02f, true, -1.0f);
+		OpenDeathWidget();
+		//!GetWorld()->GetTimerManager().SetTimer(UnrealReduceTier, this, &AARPGCharacter::ReduceHpByTimer, 0.02f, true, -1.0f);
 	}
 }
 
@@ -169,6 +213,7 @@ void AARPGCharacter::ResetCombo()
 	IsAttacking = false;
 	SaveAttack = false;
 	IsStartDodge = false;
+	IsDamaged = false;
 }
 
 void AARPGCharacter::ComboAttackSave()
@@ -373,7 +418,7 @@ void AARPGCharacter::Switch(int value)
 
 void AARPGCharacter::StartDodge()
 {
-	if (CurrentDodgeCD >= DodgeCD) 
+	if (CurrentDodgeCD >= DodgeCD && StudyDodge)
 	{
 		IsStartDodge = true;
 		Dodge(DodgeDirection[0], DodgeDirection[1]);

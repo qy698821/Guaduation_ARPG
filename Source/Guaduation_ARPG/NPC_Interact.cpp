@@ -39,9 +39,9 @@ void ANPC_Interact::InitShop()
 		FInventoryItem* ItemToAdd1 = ItemTable->FindRow<FInventoryItem>("1", "");
 		FInventoryItem* ItemToAdd2 = ItemTable->FindRow<FInventoryItem>("2", "");
 		ShopItem.Add(*ItemToAdd1);
-		ShopItem.Add(*ItemToAdd2);
+		//!ShopItem.Add(*ItemToAdd2);
 
-		for (int i = 2; i < ShopNum; ++i)
+		for (int i = 1; i < ShopNum; ++i)
 		{
 			ShopItem.Add(*ItemToAdd);
 		}

@@ -62,6 +62,7 @@ void ACharacterBase::ReduceHp(float Damage)
 			{
 				Ptr->LockOff();
 			}
+			SetDeathBB();
 			this->PlayAnimMontage(DeathMontage, 1.0f);
 			UGameplayStatics::PlaySound2D(GetWorld(), DeathSound);
 			GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ACharacterBase::DestoryByTimer, 2.0, false, 1.5f);
@@ -84,6 +85,7 @@ void ACharacterBase::ReduceHpByTimer()
 
 void ACharacterBase::Damaged(AActor * Attacker, float Damage)
 {
+	SetAttackBB();
 	PlayDamageMontage(GetAttackAngle(Attacker));
 	ReduceHp(Damage);
 }

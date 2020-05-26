@@ -89,10 +89,10 @@ public:
 
 	///Character attribute
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
-		float HP = 1000.0f;
+		float HP = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
-		float MaxHP = 1000.0f;
+		float MaxHP = 100.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character attribute")
 		float UnrealHP = 0.0f;
@@ -107,14 +107,43 @@ public:
 		float Money = 100.0f;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Character attribute")
-		float Exp = 0.0f;
+		float Exp = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float AttackSpeed = 0.8f;
 
 	///End
 
+	///////Damaged////////
 
+	UPROPERTY(BlueprintReadWrite)
+		bool IsDamaged = false;
+
+	UFUNCTION(BlueprintCallable)
+		void Damaged(AActor* Attacker, float Damage);
+
+	float GetAttackAngle(AActor* Attacker);
+
+	void PlayDamageMontage(float angle);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Montage")
+		UAnimMontage* DeathMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damaged Montage")
+		UAnimMontage* HitReactBwd = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damaged Montage")
+		UAnimMontage* HitReactFwd = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damaged Montage")
+		UAnimMontage* HitReactLeft = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damaged Montage")
+		UAnimMontage* HitReactRight = nullptr;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void OpenDeathWidget();
+	/////end/////
 	///HpBar
 
 	  //The Increment Of HP
@@ -246,6 +275,28 @@ public:
 
 	//////END//////
 
+	/////skill/////
+	UPROPERTY(BlueprintReadWrite, Category = "Skill")
+		bool StudyDodge = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Skill")
+		bool StudySuckingBlood = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Skill")
+		bool StudyMaxHP = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Skill")
+		bool OpenSuckingBlood = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SuckingBlood")
+		float SuckingBloodCD = 7.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SuckingBlood")
+		float StayTime = 5.0f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "SuckingBlood")
+		bool CDOver = true;
+	/////END///////
 
 	//////// Dodge  ///////
 
