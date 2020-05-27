@@ -420,11 +420,11 @@ void AARPGCharacter::StartDodge()
 {
 	if (CurrentDodgeCD >= DodgeCD && StudyDodge)
 	{
-		IsStartDodge = true;
-		Dodge(DodgeDirection[0], DodgeDirection[1]);
-		this->PlayAnimMontage(DodgeMontage, DodgeSpeed);
-		CurrentDodgeCD = 0.0f;
-		GetWorld()->GetTimerManager().SetTimer(ResetDodgeCDByTimer, this, &AARPGCharacter::ResetDodgeCD, 0.1f, true, -1);
+		IsStartDodge = true;//进入闪避，结束其他逻辑
+		Dodge(DodgeDirection[0], DodgeDirection[1]);//执行Dodge函数
+		this->PlayAnimMontage(DodgeMontage, DodgeSpeed);//播放动画
+		CurrentDodgeCD = 0.0f;//重置闪避CD
+		GetWorld()->GetTimerManager().SetTimer(ResetDodgeCDByTimer, this, &AARPGCharacter::ResetDodgeCD, 0.1f, true, -1);//开始CD冷却
 	}
 }
 
@@ -477,10 +477,10 @@ void AARPGCharacter::Dodge(float forward, float right)
 	{
 		DodgeRotation.Yaw = this->GetController()->GetControlRotation().Yaw + 270.0f;
 	}
-	SetActorRelativeRotation(DodgeRotation);
-	DodgeLocation = UKismetMathLibrary::GetForwardVector(DodgeRotation);
-	GetWorld()->GetTimerManager().SetTimer(DodgeMoveTimer, this, &AARPGCharacter::DodgeMove, 0.01f, true, -1.0f);
-	AddActorWorldOffset(DodgeLocation * 100);
+	SetActorRelativeRotation(DodgeRotation);//旋转角色
+	DodgeLocation = UKismetMathLibrary::GetForwardVector(DodgeRotation);//获取单位向量
+	GetWorld()->GetTimerManager().SetTimer(DodgeMoveTimer, this, &AARPGCharacter::DodgeMove, 0.01f, true, -1.0f);//执行移动
+	//!AddActorWorldOffset(DodgeLocation * 100);
 }
 
 void AARPGCharacter::DodgeMove()
@@ -510,7 +510,7 @@ void AARPGCharacter::ResetDodgeCD()
 		CurrentDodgeCD = DodgeCD;
 		if (ResetDodgeCDByTimer.IsValid())
 		{
-			GetWorld()->GetTimerManager().ClearTimer(ResetDodgeCDByTimer);
+			GetWorld()->GetTimerManager().ClearTimer(ResetDodgeCDByTimer);//
 		}
 	}
 }

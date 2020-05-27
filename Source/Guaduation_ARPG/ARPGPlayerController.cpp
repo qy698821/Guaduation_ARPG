@@ -66,7 +66,7 @@ void AARPGPlayerController::MoveRight(float Value)
 	AARPGCharacter* CharacterPtr = Cast<AARPGCharacter>(this->GetCharacter());
 	if (CharacterPtr)
 	{
-		CharacterPtr->DodgeDirection[1] = Value;
+		CharacterPtr->DodgeDirection[1] = Value;//»ñÈ¡×óÓÒÖµ
 		if (CharacterPtr->IsStartDodge || CharacterPtr->IsDamaged)
 		{
 			return;
