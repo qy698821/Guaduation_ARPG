@@ -188,18 +188,21 @@ void AARPGCharacter::OnFastAttack()
 		if (FastAttackCount == 0) 
 		{
 			FastAttackCount = 1;
+			AttackValue = AttackPower * 1;
 			this->PlayAnimMontage(FastAttack1, AttackSpeed);
 			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound1);
 		}
 		else if (FastAttackCount == 1) 
 		{
 			FastAttackCount = 2;
+			AttackValue = AttackPower * 1;
 			this->PlayAnimMontage(FastAttack2, AttackSpeed);
 			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound2);
 		}
 		else if (FastAttackCount == 2)
 		{
 			FastAttackCount = 0;
+			AttackValue = AttackPower * 1.5f;
 			this->PlayAnimMontage(FastAttack3, AttackSpeed);
 			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
 		}
@@ -225,18 +228,21 @@ void AARPGCharacter::ComboAttackSave()
 		if (FastAttackCount == 0)
 		{
 			FastAttackCount = 1;
+			AttackValue = AttackPower * 1;
 			this->PlayAnimMontage(FastAttack1, AttackSpeed);
 			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound1);
 		}
 		else if (FastAttackCount == 1)
 		{
 			FastAttackCount = 2;
+			AttackValue = AttackPower * 1;
 			this->PlayAnimMontage(FastAttack2, AttackSpeed);
 			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound2);
 		}
 		else if (FastAttackCount == 2)
 		{
 			FastAttackCount = 0;
+			AttackValue = AttackPower * 1.5f;
 			this->PlayAnimMontage(FastAttack3, AttackSpeed);
 			UGameplayStatics::PlaySound2D(GetWorld(), FastAttackSound3);
 		}

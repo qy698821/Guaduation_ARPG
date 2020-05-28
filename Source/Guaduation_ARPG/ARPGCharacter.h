@@ -100,6 +100,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float AttackPower = 10.0f;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Character attribute")
+		float AttackValue = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float Defense = 10.0f;
 
