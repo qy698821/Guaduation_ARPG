@@ -94,7 +94,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float MaxHP = 100.0f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character attribute")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float UnrealHP = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
