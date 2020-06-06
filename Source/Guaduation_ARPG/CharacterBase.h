@@ -105,4 +105,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void ReSetAttackBB();
+
+	bool isDeath = false;
 };
