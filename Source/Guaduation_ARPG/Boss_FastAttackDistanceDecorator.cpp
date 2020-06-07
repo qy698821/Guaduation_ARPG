@@ -12,7 +12,7 @@ bool UBoss_FastAttackDistanceDecorator::CalculateRawConditionValue(UBehaviorTree
 	if (Ptr) 
 	{
 		float Distance = Ptr->GetDistanceTo(Ptr->CurrentPlayer);
-		if (Distance <= Ptr->DistanceJudY)
+		if (Distance <= Ptr->DistanceJudY && Ptr->FastAttackCD >= Ptr->MaxFastAttackCD)
 		{
 			return true;
 		}

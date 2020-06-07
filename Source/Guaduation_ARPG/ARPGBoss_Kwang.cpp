@@ -22,8 +22,9 @@ AARPGBoss_Kwang::AARPGBoss_Kwang()
 	{
 		BehaviorTree = BehaviorTreeAssert.Object;
 	}
+	FastAttackCD = MaxFastAttackCD;
 	SweepAttackCD = MaxSweepAttackCD;
-	RemoteAttackCD = MaxRemoteAttackCD;
+	RemoteAttackCD = 0.0f;
 	ChangedStepCD = MaxChangedStepCD;
 	SupperSweepCD = MaxSupperSweepCD;
 
@@ -74,6 +75,7 @@ void AARPGBoss_Kwang::Start_Boss_Battle()
 		Ptr->BBComponent->SetValueAsBool(CanMove, true);
 		Ptr->BBComponent->SetValueAsObject(FName("Player"), UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter());
 		CurrentPlayer = UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter();
+		ResetCD(REMOTEATTACT);
 	}
 }
 
@@ -99,6 +101,11 @@ void AARPGBoss_Kwang::ChangeMoveStatus()
 			Ptr->BBComponent->SetValueAsBool(CanMove, false);
 			return;
 		}
+		if (IsDamaged) 
+		{
+			Ptr->BBComponent->SetValueAsBool(CanMove, false);
+			return;
+		}
 	}
 }
 
@@ -113,8 +120,26 @@ void AARPGBoss_Kwang::OnFastAttack()
 		IsAttack = true;
 		FastAttackCount = 1;
 		this->PlayAnimMontage(FastAttack1, AttackSpeed);
+		FastAttackCD = 0.0f;
+		ResetCD(FASTATTACK);
 	}
 
+}
+
+void AARPGBoss_Kwang::ResetFastAttackCD()
+{
+	if (FastAttackCD < MaxFastAttackCD)
+	{
+		FastAttackCD += 0.1f;
+	}
+	else
+	{
+		FastAttackCD = MaxFastAttackCD;
+		if (ResetFastAttackCDByTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(ResetFastAttackCDByTimer);
+		}
+	}
 }
 
 void AARPGBoss_Kwang::OnSweepAttack()
@@ -207,6 +232,7 @@ void AARPGBoss_Kwang::ResetCD(AtributeCD CDName)
 	switch (CDName) 
 	{
 	case FASTATTACK:
+		GetWorld()->GetTimerManager().SetTimer(ResetFastAttackCDByTimer, this, &AARPGBoss_Kwang::ResetFastAttackCD, 0.1f, true, -1);
 		break;
 	case SWEEPATTACK:
 		GetWorld()->GetTimerManager().SetTimer(ResetSweepAttackCDByTimer, this, &AARPGBoss_Kwang::ResetSweepAttackCD, 0.1f, true, -1);
@@ -308,6 +334,7 @@ void AARPGBoss_Kwang::ResetCombo()
 	}
 	IsAttack = false;
 	IsSuperArmor = false;
+	IsDamaged = false;
 }
 
 void AARPGBoss_Kwang::ComboAttackSave()
@@ -355,7 +382,11 @@ void AARPGBoss_Kwang::ComboAttackSave()
 
 void AARPGBoss_Kwang::Damaged(AActor* Attacker, float Damage) 
 {
-	PlayDamageMontage(GetAttackAngle(Attacker));
+	if (!IsAttack) 
+	{
+		PlayDamageMontage(GetAttackAngle(Attacker));
+		IsDamaged = true;
+	}
 	ReduceHp(Damage);
 	if (HP <= MaxHP / 2) 
 	{

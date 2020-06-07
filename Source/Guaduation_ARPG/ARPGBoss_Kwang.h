@@ -84,6 +84,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DistanceJudgement")
 		float DistanceJudY = 200.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		float FastAttackValue = 20.0f;
+
 	//Combo System
 	UFUNCTION(BlueprintCallable)
 		void ResetCombo();
@@ -95,6 +99,15 @@ public:
 	
 	void OnFastAttack();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FastAttack")
+		float MaxFastAttackCD = 6.0f;
+
+	float FastAttackCD = 6.0f;
+
+	FTimerHandle ResetFastAttackCDByTimer;
+
+	void ResetFastAttackCD();
+
 	//////////////Skill 2 Sweep attack
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SweepAttack")
@@ -104,6 +117,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SweepAttack")
 		float MaxSweepAttackCD = 6.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SweepAttack")
+		float SweepAttackValue = 20.0f;
 
 	float SweepAttackCD = 6.0f;
 
@@ -131,6 +147,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RemoteAttack")
 		float MaxRemoteAttackCD = 6.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RemoteAttack")
+		float RemoteAttackValue = 20.0f;
+
 	float RemoteAttackCD = 6.0f;
 
 	FTimerHandle ResetRemoteAttackCDByTimer;
@@ -150,6 +169,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChangedStep")
 		float MaxChangedStepCD = 6.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChangedStep")
+		float ChangeStepValue = 20.0f;
+
 	float ChangedStepCD = 6.0f;
 
 	FTimerHandle ResetChangedStepCDByTimer;
@@ -165,6 +187,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SupperSweep")
 		float MaxSupperSweepCD = 6.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SupperSweep")
+		float SupperSweepValue = 6.0f;
 
 	float SupperSweepCD = 6.0f;
 
