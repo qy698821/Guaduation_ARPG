@@ -24,6 +24,9 @@ class GUADUATION_ARPG_API AARPGBoss_Kwang : public AEnemyBase
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
 	AARPGBoss_Kwang();
 

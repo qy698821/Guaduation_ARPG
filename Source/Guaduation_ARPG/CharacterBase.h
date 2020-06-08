@@ -107,4 +107,11 @@ public:
 		void ReSetAttackBB();
 
 	bool isDeath = false;
+
+	///Death Encourage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Death Encourage")
+		float MoneyEncourage = 3.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Death Encourage")
+		float ExpEncourage = 2.0f;
 };

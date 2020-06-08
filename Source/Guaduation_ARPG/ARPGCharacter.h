@@ -107,10 +107,10 @@ public:
 		float Defense = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
-		float Money = 100.0f;
+		float Money = 0.0f;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Character attribute")
-		float Exp = 100.0f;
+		float Exp = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character attribute")
 		float AttackSpeed = 0.8f;

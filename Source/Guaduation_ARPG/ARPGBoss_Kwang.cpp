@@ -22,6 +22,11 @@ AARPGBoss_Kwang::AARPGBoss_Kwang()
 	{
 		BehaviorTree = BehaviorTreeAssert.Object;
 	}
+}
+
+void AARPGBoss_Kwang::BeginPlay() 
+{
+	Super::BeginPlay();
 	FastAttackCD = MaxFastAttackCD;
 	SweepAttackCD = MaxSweepAttackCD;
 	RemoteAttackCD = 0.0f;

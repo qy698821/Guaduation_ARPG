@@ -128,6 +128,13 @@ void ACharacterBase::PlayDamageMontage(float angle)
 
 void ACharacterBase::DestoryByTimer() 
 {
+	AARPGCharacter* Ptr = Cast<AARPGCharacter>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetCharacter());
+	//Reset lock
+	if (Ptr)
+	{
+		Ptr->Money += MoneyEncourage;
+		Ptr->Exp += ExpEncourage;
+	}
 	//this->Destroyed();
 	this->Destroy();
 }
